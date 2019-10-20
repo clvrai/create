@@ -48,4 +48,4 @@ An example JSON definition of a level is shown below:
 }
 ```
 
-We define the name of the level, the location of the goal and the target, the type of reward (sparse or dense) and the objects in our escene. We also define the level of stochasicity in our environment. 
+We define the name of the level, the location of the goal and the target, the type of reward (sparse or dense) and the objects in our escene. We also define the level of stochasticity in our environment. 
