@@ -3,19 +3,16 @@
 
 | <img src="github-assets/buckets.gif" width="200">  | <img src="github-assets/basket.gif" width="200">  | <img src="github-assets/collide.gif" width="200">  | <img src="github-assets/create.gif" width="200">  |
 
-CREATE is a multi-step physics based puzzle reinforcement learning benchmark. The goal of the game is to get the red ball (the target ball) to the blue ball (the goal ball). 
-CREATE features 10 challenging physical reasoning tasks where the agent must
-select a tool to place from over 2,000 possible tools and choose the `x,y`
-coordinates on the screen where the tool should be placed. 
+CREATE is a multi-step physics based puzzle reinforcement learning benchmark. The goal of the game is to get the red ball (the target ball) to the blue ball (the goal ball). The agent must both select a tool and where to place the tool on the screen. To solve the task multiple tools need to be placed. This environment is a simple Gym interface and is easy to use with RL and meta-RL methods. 10 challenging tasks are included by default and it is easy to define your own. Likewise 20 distinct tool types are included each with more variations of sizes, angles, friction parameters.
 
 This environment was created to encourage research on the following areas: 
-- Multi-step reinforcment learning in precise physics based environments. All
-  of the 10 levels require solving the task through different physical
-  phenomina. 
 - Tool usage in reinforcement learning. The environment can be configurated to
   have how ever many tools available. Agents must reason about which tool is
   appropriate for the current state and the desired usage or `x,y` position to
   place the tool at. 
+- Multi-step reinforcment learning in precise physics based environments. All
+  of the 10 levels require solving the task through different physical
+  phenomina. 
 - Task generalization. Generalizing between the 10 tasks provided presents a
   challenge for current RL methods. Each task can generate further
   configurations of the same randomized subtask and it is also easy to define
