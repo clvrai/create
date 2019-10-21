@@ -3,7 +3,11 @@
 
 | <img src="github-assets/buckets.gif" width="200">  | <img src="github-assets/basket.gif" width="200">  | <img src="github-assets/collide.gif" width="200">  | <img src="github-assets/create.gif" width="200">  |
 
-CREATE is a multi-step physics based puzzle reinforcement learning benchmark. The goal of the game is to get the red ball (the target ball) to the blue ball (the goal ball). The agent must both select a tool and where to place the tool on the screen. To solve the task multiple tools need to be placed. This environment is a simple Gym interface and is easy to use with RL and meta-RL methods. 10 challenging tasks are included by default and it is easy to define your own. Likewise 20 distinct tool types are included each with more variations of sizes, angles, friction parameters.
+CREATE is a multi-step physics based puzzle reinforcement learning benchmark featuring many diverse tools. The goal of the game is to get the red ball (the target ball) to the blue ball (the goal ball). The agent must select which tool to place and where to place it. To solve the task multiple tools need to be placed. 
+
+This environment is a simple Gym interface and is easy to use with RL and meta-RL methods. 10 challenging tasks are included by default and it is easy to define your own. Likewise 20 distinct tool types are included each with more variations of sizes, angles, friction parameters.
+
+Try solving tasks for yourself on the [online demo](http://lim-e.usc.edu:8080/create/). Or get started with some [examples](https://github.com/gitlimlab/CREATE/tree/master/examples).
 
 This environment was created to encourage research on the following areas: 
 - Tool usage in reinforcement learning. The environment can be configurated to
@@ -18,7 +22,6 @@ This environment was created to encourage research on the following areas:
   configurations of the same randomized subtask and it is also easy to define
   your own tasks. 
 
-Try solving tasks for yourself on the [online demo](https://www.google.com).
 
 
 ## Usage
@@ -55,6 +58,8 @@ An example JSON definition of a task is shown below:
     ]
 }
 ```
+You can register this JSON file as a gym environment by calling `register_json_folder` passing the name of the folder the JSON files are in. You can also call `register_json_str` to register just one task defined as a string. See [here](https://github.com/gitlimlab/CREATE/blob/master/examples/create_task.ipynb) for an example. 
+
 We start by defining the name of the level ('Moving') specify the initial position of the target ball and goal location. The 'rnd' section defines the stochasicity of the starting position for both the target and goal in the scene. In the 'env' section we define all the objects that are in the scene. We would load the level by specifying `gym.create('CreateLevelMoving')` Here are a complete list of options we can specify for the top level fields:
 - `name`: name of the task. This will determine the load name of the task as well. 
 - `target`: position of the target ball.
