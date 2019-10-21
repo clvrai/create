@@ -3,7 +3,7 @@
 
 | <img src="github-assets/buckets.gif" width="200">  | <img src="github-assets/basket.gif" width="200">  | <img src="github-assets/collide.gif" width="200">  | <img src="github-assets/create.gif" width="200">  |
 
-CREATE is a multi-step physics based puzzle reinforcement learning benchmark.
+CREATE is a multi-step physics based puzzle reinforcement learning benchmark. The goal of the game is to get the red ball (the target ball) to the blue ball (the goal ball). 
 CREATE features 10 challenging physical reasoning tasks where the agent must
 select a tool to place from over 2,000 possible tools and choose the `x,y`
 coordinates on the screen where the tool should be placed. 
@@ -25,7 +25,7 @@ Try solving tasks for yourself on the [online demo](https://www.google.com).
 
 
 ## Usage
-This environment is just a normal Gym environment. Simply `import create_game`
+This environment is conforms to the standard [OpenAI Gym](https://github.com/openai/gym) environment interface. Simply `import create_game`
 to register to the environment. Then create the gym environment using the
 standard command: 
 `gym.make('CreateLevelPush-v0')` with the name of the task you want to use. CREATE features 10 diverse default tasks which can be seen in the "Included Tasks" section. You can easily create more using the simple JSON definition system. 
@@ -36,45 +36,39 @@ environment.
 
 
 ## Defining Tasks
-An example JSON definition of a level is shown below: 
+You can also create custom tasks in CREATE with ease. Simply define the level in JSON and you are good to go. 
+An example JSON definition of a task is shown below: 
 ```
 {
-     name :  Navigate ,
-     lvl_type :  marker ,
-     target :  [0.1, -0.35 + OFFSET] ,
-     goal :  [-0.65, -0.7 + OFFSET] ,
-     reward :  sparse ,
-     rnd : {
-             _marker_ball:0 :  [uniform(-HIGH_NOISE, HIGH_NOISE), uniform(-HIGH_NOISE, HIGH_NOISE)] ,
-            "target,medium_floor:0": "[uniform(-MID_NOISE, MID_NOISE), uniform(-MID_NOISE, MID_NOISE)]",
-             goal,medium_floor:1 :  [uniform(-HIGH_NOISE, HIGH_NOISE), uniform(-HIGH_NOISE, HIGH_NOISE)] 
-        },  
-     env : [
-        {   
-             name :  marker_ball ,
-             pos :  [-0.6, 0.75] ,
-             id : 0
-        },  
-        {   
-             name :  medium_floor ,
-             pos :  [0.1, -0.35] ,
-             id : 0
-        },  
-        {   
-             name :  medium_floor ,
-             pos :  [-0.65, -0.7] ,
-             id : 1
-        },  
-        {   
-             name :  floor ,
-             pos :  [-0.5, 0.1] ,
-             length : 40
-        }   
-    ]   
+     'name' :  'Moving' ,
+     'target' :  '[0.6, 0.75]',
+     'goal' :  '[-0.7, 0.0]',
+     'moving_goal' : true,
+     'rnd' : {
+         'target' :  '[uniform(-HIGH_NOISE, HIGH_NOISE), uniform(-HIGH_NOISE, HIGH_NOISE)]',
+         'goal' :  '[0., uniform(-LARGE_NOISE, LARGE_NOISE)]' 
+    },
+    'env' : [
+        {
+             'name' :  'trampoline',
+             'pos' :  '[-0.7, -0.75]' ,
+             'id' : '1',
+             'elasticity' : '1.0'
+        }
+    ]
 }
 ```
-
-We define the name of the level, the location of the goal and the target, the type of reward (sparse or dense) and the objects in our escene. We also define the level of stochasticity in our environment. 
+We start by defining the name of the level ('Moving') specify the initial position of the target ball and goal location. The 'rnd' section defines the stochasicity of the starting position for both the target and goal in the scene. In the 'env' section we define all the objects that are in the scene. We would load the level by specifying `gym.create('CreateLevelMoving')` Here are a complete list of options we can specify for the top level fields:
+- `name`: name of the task. This will determine the load name of the task as well. 
+- `target`: position of the target ball.
+- `goal`: position of the goal ball.
+- `moving_goal`: `true` if the goal should act as a ball with mass and be able to be moved. If false, the goal does not interact with anything. 
+- `rnd`: The stochasicities for the each object in the level. Note that stochasicity can be applied to multiple objects in the scene at the same time through specifying two names in the field as: 
+  ```
+  'goal,medium_floor:1' :  '[uniform(-HIGH_NOISE, HIGH_NOISE), uniform(-HIGH_NOISE, HIGH_NOISE)]'
+   ```
+   In this case we would refer to the goal object and the env object with name 'medium_floor' that has the ID 1. 
+- `env`: Where all of the environment objects are defined. See [this location in the code](https://github.com/gitlimlab/CREATE/blob/2b68ffcdcc6d03fa0cfcae97963f2576d233c9ff/create_game/tools/tool_factory.py#L37) for the complete list of possible objects. You can also specify parameters to this object such as 'elasticity', 'length' or 'angle'. You can also specify an ID to reference in the rnd noise. 
 
 
 ## Included Tasks
