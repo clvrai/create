@@ -1,7 +1,7 @@
 import sys
 sys.path.insert(0, '.')
 # import create game whatever way works best for you
-from create_game import CreateGameSettings
+import create_game
 
 import gym
 

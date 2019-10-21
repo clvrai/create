@@ -1,9 +1,31 @@
 # Chain REAction Tool Environment (CREATE)
 
-CREATE is a multi-step physics based puzzle reinforcement learning benchmark. 
+CREATE is a multi-step physics based puzzle reinforcement learning benchmark.
+CREATE features 10 challenging physical reasoning tasks where the agent must
+select a tool to place from over 2,000 possible tools and choose the `x,y`
+coordinates on the screen where the tool should be placed. 
+
+This environment was created to encourage research on the following areas: 
+- Multi-step reinforcment learning in precise physics based environments. All
+  of the 10 levels require solving the task through different physical
+  phenomina. 
+- Tool usage in reinforcement learning. The environment can be configurated to
+  have how ever many tools available. Agents must reason about which tool is
+  appropriate for the current state and the desired usage or `x,y` position to
+  place the tool at. 
+- Task generalization. Generalizing between the 10 tasks provided presents a
+  challenge for current RL methods. Each task can generate further
+  configurations of the same randomized subtask and it is also easy to define
+  your own tasks. 
+
+Try solving tasks for yourself on the [online demo](https://www.google.com).
 
 ## Usage
-Using this environment is as easy as any other Gym environment. Simply `import create_game` where you want to use it and then `gym.make('CreateLevelPush-v0')` with the name of the task you want to use. CREATE features 10 diverse built in tasks. By default stochasicity is applied to each environment. If you don't want to use any stochasicity specify `Det` after the name of the level like: `gym.make('CreateLevelPushDet-v0')`. 
+This environment is just a normal Gym environment. Simply `import create_game`
+to register to the environment. Then create the gym environment using the
+standard command: 
+`gym.make('CreateLevelPush-v0')` with the name of the task you want to use. CREATE features 10 diverse default tasks. You can easily create more using the simple JSON definition system. 
+Some level of stochasicity is applied in all of the default environments. If you don't want to use any stochasicity specify `Det` after the name of the level like: `gym.make('CreateLevelPushDet-v0')`. 
 
 See `examples/random_agent.py` for an example with using a random agent on the
 environment. 
