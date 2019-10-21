@@ -52,6 +52,9 @@ class LogicLevelFile(CreateGame):
     def get_json_file(self):
         return None
 
+    def _is_json_str(self):
+        return '{' in self.get_json_file()
+
     def get_is_rnd(self):
         raise ValueError('not implemented')
 
@@ -114,12 +117,15 @@ class LogicLevelFile(CreateGame):
         Load in the data specified in the JSON file.
         """
         self._check_setup()
-        json_loc = self.get_json_file()
-        if json_loc is None:
+        json_str = self.get_json_file()
+        if json_str is None:
             return
 
-        with open(json_loc, 'r') as f:
-            jf = json.load(f)
+        if not self._is_json_str():
+            with open(json_str, 'r') as f:
+                jf = json.load(f)
+        else:
+            jf = json.loads(json_str)
 
         if 'overlap_thresh' in jf:
             self.OVERLAP_THRESHOLD = jf['overlap_thresh']

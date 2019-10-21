@@ -1,7 +1,7 @@
 # Register all the tasks
 
 
-from .levels.lvl_config import setup_json_lvls, setup_class_lvls
+from .levels.lvl_config import register_json_folder, register_json_str
 import create_game.defs
 from .settings import CreateGameSettings
 
