@@ -1,5 +1,8 @@
 # Chain REAction Tool Environment (CREATE)
 
+
+| <img src="github-assets/buckets.gif" width="200">  | <img src="github-assets/basket.gif" width="200">  | <img src="github-assets/collide.gif" width="200">  | <img src="github-assets/create.gif" width="200">  |
+
 CREATE is a multi-step physics based puzzle reinforcement learning benchmark.
 CREATE features 10 challenging physical reasoning tasks where the agent must
 select a tool to place from over 2,000 possible tools and choose the `x,y`
@@ -19,6 +22,7 @@ This environment was created to encourage research on the following areas:
   your own tasks. 
 
 Try solving tasks for yourself on the [online demo](https://www.google.com).
+
 
 ## Usage
 This environment is just a normal Gym environment. Simply `import create_game`
@@ -72,4 +76,14 @@ An example JSON definition of a level is shown below:
 
 We define the name of the level, the location of the goal and the target, the type of reward (sparse or dense) and the objects in our escene. We also define the level of stochasticity in our environment. 
 
+
 ## Included Tasks
+
+| Task Description  | Task Example |
+| ------------- | ------------- |
+| Basket (`CreateLevelBasket`)  | <img src="github-assets/basket.gif" width="400">  |
+| Basket (`CreateLevelBuckets`)  | <img src="github-assets/buckets.gif" width="400">  |
+| Basket (`CreateLevelCollide`)  | <img src="github-assets/collide.gif" width="400">  |
+| Basket (`CreateLevelObstacle`)  | <img src="github-assets/create.gif" width="400">  |
+| Basket (`CreateLevelLadder`)  | <img src="github-assets/ladder.gif" width="400">  |
+| Basket (`CreateLevelMoving`)  | <img src="github-assets/moving.gif" width="400">  |
