@@ -24,7 +24,7 @@ Try solving tasks for yourself on the [online demo](https://www.google.com).
 This environment is just a normal Gym environment. Simply `import create_game`
 to register to the environment. Then create the gym environment using the
 standard command: 
-`gym.make('CreateLevelPush-v0')` with the name of the task you want to use. CREATE features 10 diverse default tasks. You can easily create more using the simple JSON definition system. 
+`gym.make('CreateLevelPush-v0')` with the name of the task you want to use. CREATE features 10 diverse default tasks which can be seen in the "Included Tasks" section. You can easily create more using the simple JSON definition system. 
 Some level of stochasicity is applied in all of the default environments. If you don't want to use any stochasicity specify `Det` after the name of the level like: `gym.make('CreateLevelPushDet-v0')`. 
 
 See `examples/random_agent.py` for an example with using a random agent on the
@@ -71,3 +71,7 @@ An example JSON definition of a level is shown below:
 ```
 
 We define the name of the level, the location of the goal and the target, the type of reward (sparse or dense) and the objects in our escene. We also define the level of stochasticity in our environment. 
+
+## Included Tasks
+
+
