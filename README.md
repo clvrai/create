@@ -34,6 +34,11 @@ Some level of stochasicity is applied in all of the default environments. If you
 See `examples/random_agent.py` for an example with using a random agent on the
 environment. 
 
+## Installation
+
+IN THE FUTURE: Simply `pip install create-rl`.
+
+For now: clone this repo and `pip install -r requirements.txt` from this repo. 
 
 ## Defining Tasks
 You can also create custom tasks in CREATE with ease. Simply define the level in JSON and you are good to go. 
