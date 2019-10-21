@@ -25,7 +25,7 @@ Try solving tasks for yourself on the [online demo](https://www.google.com).
 
 
 ## Usage
-This environment is conforms to the standard [OpenAI Gym](https://github.com/openai/gym) environment interface. Simply `import create_game`
+This environment conforms to the standard [OpenAI Gym](https://github.com/openai/gym) environment interface. Simply `import create_game`
 to register to the environment. Then create the gym environment using the
 standard command: 
 `gym.make('CreateLevelPush-v0')` with the name of the task you want to use. CREATE features 10 diverse default tasks which can be seen in the "Included Tasks" section. You can easily create more using the simple JSON definition system. 

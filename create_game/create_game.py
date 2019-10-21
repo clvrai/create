@@ -309,7 +309,7 @@ class CreateGame(BaseEnv):
                             and self.goal_obj.shape.target_contact)
 
             # Was the actual goal hit?
-            if has_goal and (hit_goal or contact_goal):
+            if has_goal and (collide_goal or contact_goal):
                 self.goal_hit += 1.
                 reward += self.settings.goal_reward - \
                     0.1 * len(self.placed_tools)
