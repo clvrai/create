@@ -22,5 +22,7 @@ for iter_i in range(num_iters):
     while not done:
         action = sample_rnd_action()
         obs, reward, done, info = env.step(action)
-
-
+        try:
+            env.render('human')
+        except:
+            pass
