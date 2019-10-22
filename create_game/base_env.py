@@ -37,6 +37,7 @@ class BaseEnv(gym.Env):
         self.int_frames = None
 
         self.is_setup = False
+        self.viewer = None
 
     def set_settings(self, settings):
         """
@@ -286,6 +287,10 @@ class BaseEnv(gym.Env):
         """
         Render all currently placed objects to the scene.
         """
+        prev_mode = '%s' % mode
+        if prev_mode == 'human':
+            mode='rgb_array_high'
+
         self._check_setup()
 
         if self.int_frames is not None and self.settings.evaluation_mode and 'mega' in mode:
@@ -386,7 +391,15 @@ class BaseEnv(gym.Env):
         if 'high' in mode:
             self.screen = pygame.display.set_mode(
                 (self.settings.screen_width, self.settings.screen_height))
-        return frame
+
+        if prev_mode == 'human':
+            from gym.envs.classic_control import rendering
+            if self.viewer is None:
+                self.viewer = rendering.SimpleImageViewer()
+            self.viewer.imshow(frame)
+            return self.viewer.isopen
+        else:
+            return frame
 
     def _convert_color(self, image, from_color, to_color):
         image = image.copy()
