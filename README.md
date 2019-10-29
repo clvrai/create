@@ -24,6 +24,12 @@ See [`examples/random_agent.py`](https://github.com/gitlimlab/CREATE/blob/master
 ## Installation
 Clone this repository. `pip install -r requirements.txt` from this repo. Copy the `create_game` folder to where you want to use it. Note this project only works with Python 3.6+. 
 
+## Multi-Task
+See [`examples/multi_task.py`](https://github.com/gitlimlab/CREATE/blob/master/examples/multi_task.py) for a complete example. 
+
+## Game Configuration
+See [`create_game/settings.py`](https://github.com/gitlimlab/CREATE/blob/master/create_game/settings.py) for a list of all possible settings that can be changed about the game play, rendering, reward structure and simulation. Configure the environment as: 
+
 ## Defining Tasks
 See [`examples/create_task.ipynb`](https://github.com/gitlimlab/CREATE/blob/master/examples/create_task.ipynb) for an example on how to define custom tasks. 
 
@@ -64,11 +70,7 @@ We start by defining the name of the level ('Moving') specify the initial positi
    This stochasicity is then applied the same to the env object with name 'medium_floor' with ID 1 and the goal object. This is useful if you have a platform below a object you want to be randomly initialized and you want to move them together.  
 - `env`: Where all of the environment objects are defined. See [this location in the code](https://github.com/gitlimlab/CREATE/blob/2b68ffcdcc6d03fa0cfcae97963f2576d233c9ff/create_game/tools/tool_factory.py#L37) for the complete list of possible objects. You can also specify parameters to this object such as 'elasticity', 'length' or 'angle'. You can also specify an ID to reference in the rnd noise. 
 
-## Multi-Task
-See [`examples/multi_task.py`](https://github.com/gitlimlab/CREATE/blob/master/examples/multi_task.py) for a complete example. 
 
-## Game Configuration
-See [`create_game/settings.py`](https://github.com/gitlimlab/CREATE/blob/master/create_game/settings.py) for a list of all possible settings that can be changed about the game play, rendering, reward structure and simulation. Configure the environment as: 
 ```
 from create_game import CreateGameSettings
 import gym
