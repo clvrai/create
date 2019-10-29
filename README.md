@@ -19,13 +19,14 @@ Try solving tasks for yourself on the [online demo](http://lim-e.usc.edu:8080/cr
 `gym.make('CreateLevelPush-v0')` with the name of the task you want to use. CREATE features 10 diverse default tasks which can be seen in the "Included Tasks" section. You can easily create more using the simple JSON definition system. 
 Some level of stochasicity is applied in all of the default environments. If you don't want to use any stochasicity specify `Det` after the name of the level like: `gym.make('CreateLevelPushDet-v0')`. 
 
-See `examples/random_agent.py` for an example with using a random agent on the
-environment. 
+See [`examples/random_agent.py`](https://github.com/gitlimlab/CREATE/blob/master/examples/random_agent.py) for an example with using a random agent on the environment. 
 
 ## Installation
 Clone this repository. `pip install -r requirements.txt` from this repo. Copy the `create_game` folder to where you want to use it. Note this project only works with Python 3.6+. 
 
 ## Defining Tasks
+See [`examples/create_task.ipynb`](https://github.com/gitlimlab/CREATE/blob/master/examples/create_task.ipynb) for an example on how to define custom tasks. 
+
 You can also create custom tasks in CREATE with ease. Simply define the level in JSON and you are good to go. 
 An example JSON definition of a task is shown below: 
 ```
@@ -49,7 +50,7 @@ An example JSON definition of a task is shown below:
 }
 ```
 
-You can register this JSON file as a gym environment by calling `register_json_folder` passing the name of the folder the JSON files are in. You can also call `register_json_str` to register just one task defined as a string. See [here](https://github.com/gitlimlab/CREATE/blob/master/examples/create_task.ipynb) for an example. 
+You can register this JSON file as a gym environment by calling `register_json_folder` passing the name of the folder the JSON files are in. You can also call `register_json_str` to register just one task defined as a string. 
 
 We start by defining the name of the level ('Moving') specify the initial position of the target ball and goal location. The 'rnd' section defines the stochasicity of the starting position for both the target and goal in the scene. In the 'env' section we define all the objects that are in the scene. We would load the level by specifying `gym.create('CreateLevelMoving')` Here are a complete list of options we can specify for the top level fields:
 - `name`: name of the task. This will determine the load name of the task as well. 
