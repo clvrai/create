@@ -187,6 +187,7 @@ class CreateLevelFile(CreateGame):
             self.max_num_steps = self.jf['max_num_steps']
 
         if self.task_id is None or self.eval_rnd_map is None:
+            print('generating noise map')
             self.eval_rnd_map = self.gen_noise_apply_map()
 
         target_pos = self.gen_target_pos + get_noise(self.eval_rnd_map, 'target')
