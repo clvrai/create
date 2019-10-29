@@ -5,7 +5,7 @@
 
 CREATE is a multi-step physics based puzzle reinforcement learning benchmark featuring many diverse tools. The goal of the game is to get the red ball (the target ball) to the blue ball (the goal ball). The agent must select which tool to place and where to place it. To solve the task multiple tools need to be placed. 
 
-This environment is a simple Gym interface and is easy to use with RL and meta-RL methods. 10 challenging tasks are included by default and it is easy to define your own. Likewise 20 distinct tool types are included each with more variations of sizes, angles, friction parameters.
+This environment is a simple Gym interface and is easy to use with RL and meta-RL methods. 10 challenging tasks are included by default and it is easy to define your own. Likewise, 20 distinct tool types are included each with more variations of sizes, angles, friction parameters.
 
 Try solving tasks for yourself on the [online demo](http://lim-e.usc.edu:8080/create/). Or get started with some [examples](https://github.com/gitlimlab/CREATE/tree/master/examples).
 
@@ -34,6 +34,11 @@ Some level of stochasicity is applied in all of the default environments. If you
 See `examples/random_agent.py` for an example with using a random agent on the
 environment. 
 
+## Installation
+
+IN THE FUTURE: Simply `pip install create-rl`.
+
+For now: clone this repo and `pip install -r requirements.txt` from this repo. 
 
 ## Defining Tasks
 You can also create custom tasks in CREATE with ease. Simply define the level in JSON and you are good to go. 
@@ -69,7 +74,7 @@ We start by defining the name of the level ('Moving') specify the initial positi
   ```
   'goal,medium_floor:1' :  '[uniform(-HIGH_NOISE, HIGH_NOISE), uniform(-HIGH_NOISE, HIGH_NOISE)]'
    ```
-   In this case we would refer to the goal object and the env object with name 'medium_floor' that has the ID 1. 
+   This stochasicity is then applied the same to the env object with name 'medium_floor' with ID 1 and the goal object. This is useful if you have a platform below a object you want to be randomly initialized and you want to move them together.  
 - `env`: Where all of the environment objects are defined. See [this location in the code](https://github.com/gitlimlab/CREATE/blob/2b68ffcdcc6d03fa0cfcae97963f2576d233c9ff/create_game/tools/tool_factory.py#L37) for the complete list of possible objects. You can also specify parameters to this object such as 'elasticity', 'length' or 'angle'. You can also specify an ID to reference in the rnd noise. 
 
 
