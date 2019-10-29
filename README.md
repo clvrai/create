@@ -1,9 +1,10 @@
 # Chain REAction Tool Environment (CREATE)
-<kbd>
-     <p align="center">
+
+<p align="center">
+     <kbd>
           <img src="github-assets/combo3.gif" width="400">
-     </p>
-</kbd>
+     </kbd>
+</p>
 
 CREATE is a multi-step physics based puzzle reinforcement learning benchmark featuring many diverse tools. The goal of the game is to get the red ball (the target ball) to the blue ball (the goal ball). The agent must select which tool to place and where to place it. To solve the task multiple tools need to be placed. 
 
