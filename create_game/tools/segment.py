@@ -80,17 +80,19 @@ class Segment(FixedObj):
             register_fric_shape(self.shape, self.friction, space)
 
 
-    def render(self, screen, scale=None):
+    def render(self, screen, scale=None, anti_alias=False):
         if scale is None:
             scale = 1
-        # p1 = scale * self.flipy(self.start_pos)
-        # p2 = scale * self.flipy(self.end_pos)
-        # pg.draw.lines(screen, pg.Color(self.color), False, (p1,
-        #     p2), int(scale * self.thickness))
-        pointlist = [scale * self.flipy(x) for x in self.pointlist]
 
-        gfxdraw.filled_polygon(screen, pointlist, pg.Color(self.color))
-        gfxdraw.aapolygon(screen, pointlist, pg.Color(self.color))
+        if anti_alias:
+            pointlist = [scale * self.flipy(x) for x in self.pointlist]
+            gfxdraw.filled_polygon(screen, pointlist, pg.Color(self.color))
+            gfxdraw.aapolygon(screen, pointlist, pg.Color(self.color))
+        else:
+            p1 = scale * self.flipy(self.start_pos)
+            p2 = scale * self.flipy(self.end_pos)
+            pg.draw.lines(screen, pg.Color(self.color), False, (p1,
+                p2), int(scale * self.thickness))
 
     def get_shape(self):
         return self.shape

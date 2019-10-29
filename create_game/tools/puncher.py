@@ -40,7 +40,7 @@ class Puncher(BasicObj):
         self.end_pos = self.pop_end_pos
 
 
-    def render(self, screen, scale=None):
+    def render(self, screen, scale=None, anti_alias=False):
         if scale is None:
             scale = 1
         p1 = scale * self.flipy(self.start_pos)

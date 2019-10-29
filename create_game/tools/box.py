@@ -21,13 +21,13 @@ class BoxTool(GravityObj):
 
         if color == 'box':
             self.img = ImageTool('box.png', angle=0, pos=pos[:],
-                                 length=size, height=size, debug_render=False,
-                                 use_shape=self.shape)
+                    use_shape=self.shape,
+                    debug_render=False)
 
     def get_body(self):
         return self.body
 
-    def render(self, screen, scale=1):
+    def render(self, screen, scale=1, anti_alias=False):
         if self.color == 'box':
             self.img.render(screen, scale, self.flipy)
         else:

@@ -48,11 +48,9 @@ class Funnel(FixedPoly):
         img_pos = [pos1[0] -  3. * size / 4 * np.sin(angle),
                 pos1[1] + 3. * size / 4 * np.cos(angle)]
 
-        self.img = ImageTool('funnel.png', 0.0 + angle, img_pos,
-                2 * size * np.sin(np.pi / 3),
-                size * (1 + np.cos(np.pi / 3)),
-                debug_render=False,
-                use_shape=self.shape)
+        self.img = ImageTool('funnel.png', angle, img_pos,
+                use_shape=self.shape,
+                debug_render=False)
         self.collision_type = 5
 
 
@@ -67,7 +65,7 @@ class Funnel(FixedPoly):
         h = space.add_collision_handler(1, self.collision_type)
         h.pre_solve = funnel_touching_handler
 
-    def render(self, screen, scale=None):
+    def render(self, screen, scale=None, anti_alias=False):
         if scale is None:
             scale = 1
 

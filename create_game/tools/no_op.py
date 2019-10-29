@@ -12,7 +12,7 @@ class NoOp(object):
     def add_to_space(self, space):
         return
 
-    def render(self, space, scale=1):
+    def render(self, space, scale=1, anti_alias=False):
         pass
 
     def render_black_box(self, space):

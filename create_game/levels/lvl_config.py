@@ -1,5 +1,5 @@
-from .logic_level_file import LogicLevelFile
-from .logic_game_marker import LogicGameMarker
+from .create_level_file import CreateLevelFile
+from .create_game_marker import CreateGameMarker
 import os
 import os.path as osp
 import json
@@ -9,9 +9,9 @@ from gym.envs.registration import register
 
 def _parse_json_obj(jf, jf_str):
     if 'lvl_type' in jf and jf['lvl_type'] == 'marker':
-        super_class = 'LogicGameMarker'
+        super_class = 'CreateGameMarker'
     else:
-        super_class = 'LogicLevelFile'
+        super_class = 'CreateLevelFile'
 
     if 'reward' in jf:
         reward_type = jf['reward']
@@ -36,17 +36,19 @@ def _parse_json_obj(jf, jf_str):
     exec('globals()["%s"] = %s' % (rnd_lvl_name, rnd_lvl_name))
     exec('globals()["%s"] = %s' % (other_rnd_lvl_name, other_rnd_lvl_name))
 
+    base_package_loc = 'envs.create_game'
+
     register(
         id=lvl_name + '-v0',
-        entry_point='create_game.levels.lvl_config:' + lvl_name
+        entry_point = base_package_loc + '.levels.lvl_config:' + lvl_name
     )
     register(
         id=rnd_lvl_name + '-v0',
-        entry_point='create_game.levels.lvl_config:' + rnd_lvl_name
+        entry_point = base_package_loc + '.levels.lvl_config:' + rnd_lvl_name
     )
     register(
         id=other_rnd_lvl_name + '-v0',
-        entry_point='create_game.levels.lvl_config:' + other_rnd_lvl_name
+        entry_point = base_package_loc + '.levels.lvl_config:' + other_rnd_lvl_name
     )
 
 def register_json_folder(json_folder):

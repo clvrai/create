@@ -894,10 +894,11 @@ class ToolGenerator:
         return obj
 
 
-    def get_tool(self, tool_id, pos):
-        pos = convert_action(pos)
+    def get_tool(self, tool_id, pos, settings):
+        pos = convert_action(pos, settings)
         params = self.tools[tool_id]
         obj = self.create_tool(params, pos)
+        obj.set_settings(settings)
         return obj
 
 

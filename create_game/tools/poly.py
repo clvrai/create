@@ -2,7 +2,6 @@ from .fixed_obj import FixedObj
 import pymunk as pm
 import pygame as pg
 from pygame import gfxdraw
-from .img_tool import ImageTool
 import numpy as np
 from ..constants import fixed_color, bouncy_color
 
@@ -30,7 +29,7 @@ class FixedPoly(FixedObj):
     def get_shape(self):
         return self.shape
 
-    def render(self, screen, scale=None):
+    def render(self, screen, scale=None, anti_alias=False):
         if scale is None:
             scale = 1
 
@@ -40,9 +39,11 @@ class FixedPoly(FixedObj):
             point = scale * self.flipy([x, y])
             pointlist.append([int(point[0]), int(point[1])])
 
-        # pg.draw.polygon(screen, pg.Color(self.color), pointlist)
-        gfxdraw.filled_polygon(screen, pointlist, pg.Color(self.color))
-        gfxdraw.aapolygon(screen, pointlist, pg.Color(self.color))
+        if anti_alias:
+            gfxdraw.filled_polygon(screen, pointlist, pg.Color(self.color))
+            gfxdraw.aapolygon(screen, pointlist, pg.Color(self.color))
+        else:
+            pg.draw.polygon(screen, pg.Color(self.color), pointlist)
 
 
     def get_vertices(self, pos, n_vertices, angle, size):
@@ -53,6 +54,33 @@ class FixedPoly(FixedObj):
             theta += 2 * np.pi / n_vertices
             vertices.append([pos[0] + np.cos(theta) * size, pos[1] + np.sin(theta) * size])
         return vertices
+
+# Star
+class Star(FixedPoly):
+     def get_vertices(self, pos, n_vertices, angle, size):
+         theta = angle + np.pi / (2 * n_vertices)
+         vertices = []
+         for point in range(n_vertices):
+             theta += 2 * np.pi / n_vertices
+             vertices.append([pos[0] + np.cos(theta) * size, pos[1] + np.sin(theta) * size])
+             vertices.append([pos[0] + np.cos(theta + np.pi / n_vertices) * size / 2, pos[1] + np.sin(theta + np.pi / n_vertices) * size / 2])
+         return vertices
+
+     def render(self, screen, scale=None, anti_alias=False):
+        if scale is None:
+            scale = 1
+
+        pointlist = []
+        for v in self.vertices:
+            x, y = pm.Vec2d(v).rotated(self.shape.body.angle) + self.shape.body.position
+            point = scale * self.flipy([x, y])
+            pointlist.append([int(point[0]), int(point[1])])
+
+        if anti_alias:
+            gfxdraw.filled_polygon(screen, pointlist, pg.Color(self.color))
+            gfxdraw.aapolygon(screen, pointlist, pg.Color(self.color))
+        else:
+            pg.draw.polygon(screen, pg.Color(self.color), pointlist)
 
 
 # Triangle

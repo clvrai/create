@@ -32,8 +32,9 @@ class Ladder(Ramp):
     def add_to_space(self, space):
         super().add_to_space(space, use_friction=False)
         self.img = ImageTool('ladder.png', self.angle_rad,
-                self.pos[:], int(self.length), int(LINE_THICKNESS), debug_render=False,
-                use_shape=self.shape)
+                self.pos[:],
+                use_shape=self.shape,
+                debug_render=False)
 
         ladder = self.img.get_shape()
         ladder.sensor=True
@@ -45,7 +46,7 @@ class Ladder(Ramp):
         h.pre_solve = touching_handler
 
 
-    def render(self, screen, scale=None):
+    def render(self, screen, scale=None, anti_alias=False):
         if scale is None:
             scale = 1
 

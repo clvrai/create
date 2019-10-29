@@ -5,6 +5,7 @@
     "reward": "sparse",
     "goal_is_basket": "True",
     "ball_is_basket": "True",
+    "max_num_steps": 40,
     "rnd": {
             "target": "[uniform(-MID_NOISE, MID_NOISE), uniform(-MID_NOISE, MID_NOISE)]",
             "goal": "[uniform(-MID_NOISE, MID_NOISE), uniform(-MID_NOISE, MID_NOISE)]"

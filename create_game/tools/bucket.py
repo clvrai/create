@@ -48,10 +48,9 @@ class Bucket(FixedPoly):
         self.v_4 = np.array(self.pos) + np.array(self.vertices[3])
 
         self.img = ImageTool('bucket.png', 0.0 + angle, pos[:],
-                size * np.sqrt(2),
-                size * np.sqrt(2),
-                debug_render=False,
-                use_shape=self.shape)
+                use_shape=self.shape,
+                debug_render=False)
+
         self.collision_type = 6
 
 
@@ -68,7 +67,7 @@ class Bucket(FixedPoly):
         h.pre_solve = bucket_touching_handler
 
 
-    def render(self, screen, scale=None):
+    def render(self, screen, scale=None, anti_alias=False):
         if scale is None:
             scale = 1
 

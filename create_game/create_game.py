@@ -28,6 +28,13 @@ class CreateGame(BaseEnv):
         self.moving_goal = False
         self.target_ball_radius = None
         self.dense_reward_scale = None
+        self.no_action_space_resample = False
+
+        # place holder action space.
+        self.action_space = Dict({
+            'index': Discrete(1),
+            'pos': Box(low=-1.0, high=1.0, shape=(2,), dtype=np.float32)
+        })
 
         self.inventory = None
         # just use the defaults
@@ -41,6 +48,7 @@ class CreateGame(BaseEnv):
         self.tool_gen = ToolGenerator(settings.gran_factor)
 
         self.allowed_actions = settings.get_allowed_actions_fn(settings, self.tool_gen)
+        self._generate_inventory()
 
     def get_parts(self, tool_factory):
         """
@@ -72,9 +80,10 @@ class CreateGame(BaseEnv):
             'pos': Box(low=-1.0, high=1.0, shape=(2,), dtype=np.float32)
         })
 
-    def reset(self):
-        self._check_setup()
-        # Set our action space
+
+    def _generate_inventory(self):
+        if self.no_action_space_resample:
+            return
         if self.settings.action_random_sample:
             # Generate a new set of tools this episode for this agent to use
             tools = self.settings.action_sample_fn(self.settings,
@@ -91,6 +100,12 @@ class CreateGame(BaseEnv):
             tools = settings.action_sample_fn(self.settings, self.tool_gen,
                     self.allowed_actions, rnd_state)
             self.update_available_tools(tools)
+
+
+    def reset(self):
+        self._check_setup()
+        # Set our action space
+        self._generate_inventory()
 
         # Get the objects in the environment
         env_tools, target_obj, goal_pos = self.get_parts(self.tool_factory)
@@ -123,7 +138,7 @@ class CreateGame(BaseEnv):
                 ToolTypes.GOAL_BALL, self.goal_pos)
         # It can be just fixed and static
         else:
-            goal_obj = self.tool_factory.create(ToolTypes.GOAL, self.goal_pos)
+            goal_obj = self.tool_factory.create(ToolTypes.GOAL_STAR, self.goal_pos)
 
         goal_obj.add_to_space(self.space)
         self.goal_pos = convert_action(self.goal_pos, self.settings)
@@ -192,7 +207,7 @@ class CreateGame(BaseEnv):
         return False
 
     def check_out_of_range(self, action_pos):
-        return self.action_space.spaces['pos'].contains(action_pos)
+        return not self.action_space.spaces['pos'].contains(action_pos)
 
     def motion_stopped(self):
         all_objs = self.get_all_objs()
@@ -220,8 +235,7 @@ class CreateGame(BaseEnv):
         elif self.check_overlap(action_pos):
             placed_obj = False
         else:
-            tool = self.tool_gen.get_tool(
-                use_tool_type, action_pos)
+            tool = self.tool_gen.get_tool(use_tool_type, action_pos, self.settings)
             all_objs = self.get_all_objs()
             tool.add_to_space(self.space)
             if self.check_collisions(tool, action_pos, all_objs):
@@ -257,7 +271,7 @@ class CreateGame(BaseEnv):
         elif (self.tool_gen.tools[use_tool_type].tool_type == 'no_op'):
             reward += self.settings.no_op_reward
             self.no_op_count += 1
-        elif self.check_overlap(action_pos):
+        elif self.check_overlap(action_pos) and self.settings.use_overlap:
             reward += self.settings.blocked_action_reward
             self.overlap_action_count += 1
         else:
@@ -309,7 +323,7 @@ class CreateGame(BaseEnv):
                             and self.goal_obj.shape.target_contact)
 
             # Was the actual goal hit?
-            if has_goal and (collide_goal or contact_goal):
+            if has_goal and (collided_goal or contact_goal):
                 self.goal_hit += 1.
                 reward += self.settings.goal_reward - \
                     0.1 * len(self.placed_tools)

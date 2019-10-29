@@ -42,10 +42,11 @@ class BasicObj(object):
             *self.attached_constraints]
             )
 
-    def render(self, screen):
+    def render(self, screen, scale=None, anti_alias=False):
         raise NotImplemented('not implemented')
 
     def flipy(self, p):
+        assert self.settings is not None, 'Must set settings'
         """Convert chipmunk physics to pygame coordinates."""
         return Vec2d(p[0], -p[1] + self.settings.screen_height)
 

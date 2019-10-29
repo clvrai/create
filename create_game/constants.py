@@ -1,19 +1,14 @@
 # Constants
 
 import os.path as osp
+
 # Ramp, circle, square, triangle, pentagon, hexagon, levers, see-saw
-# fixed_color = '0xb191bd'
-# bouncy_color = '0xd0bdd7'
-# hinge_color = '0x9265a2'
-
-
 fixed_color = '0xfa8535'
-bouncy_color = '0xfba971'
+bouncy_color = '0x086788'
 hinge_color = '0xfa9149'
 
 # Special Tool colors: trampoline, cannon, fan, belt, funnel, bucket (Just load in images)
 special_tool_color = None
-
 
 # marker_color = '0xb4f7bc'
 marker_color = '0x79addc'
@@ -37,4 +32,5 @@ placed_wall_color = '0x000a11'
 solid_frame_color = None
 blank_frame_color = None
 
-asset_dir = osp.join(osp.dirname(osp.abspath(__file__)), 'assets')
+asset_dir = osp.join(osp.dirname(osp.abspath(__file__)), 'assets_high_res')
+with_subgoals = True

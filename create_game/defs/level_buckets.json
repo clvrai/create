@@ -13,7 +13,7 @@
     "env": [
         {
             "name": "floor",
-            "pos": [-0.48, -0.97],
+            "pos": [-0.48, -0.99],
             "length": 45.0,
             "thickness": 1.0,
             "color": "STEELBLUE"
@@ -27,7 +27,7 @@
         },
         {
             "name": "wall",
-            "pos": "[-0.97, -0.7]",
+            "pos": "[-0.99, -0.7]",
             "length": 45.0,
             "thickness": 1.0,
             "color": "STEELBLUE"

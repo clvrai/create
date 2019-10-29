@@ -29,14 +29,14 @@
             "friction": 1.0,
             "angle": "-np.pi/6",
             "thickness": 1.0,
-            "color": "0x000a11"
+            "color": "STEELBLUE"
         },
         {
             "name": "wall",
             "pos": [-0.25, 0.04],
             "length": 12.7,
             "friction": 1.0,
-            "color": "0x000a11",
+            "color": "STEELBLUE",
             "thickness": 1.0
         },
         {
@@ -45,20 +45,20 @@
             "length": 26.0,
             "friction": 1.0,
             "thickness": 1.0,
-            "color": "0x000a11"
+            "color": "STEELBLUE"
         },
         {
             "name": "medium_floor",
             "pos": "[-0.8, -0.81]",
             "thickness": 1.0,
-            "color": "0x000a11"
+            "color": "STEELBLUE"
         },
         {
 
             "name": "medium_floor",
             "pos": "[0.12, -0.59]",
             "thickness": 1.0,
-            "color": "0x000a11"
+            "color": "STEELBLUE"
         },
         {
             "name": "ramp",
@@ -67,7 +67,7 @@
             "friction": 1.0,
             "angle": "np.pi/8",
             "thickness": 1.0,
-            "color": "0x000a11"
+            "color": "STEELBLUE"
         },
         {
             "name": "box",
@@ -91,7 +91,7 @@
             "length": 15.0,
             "friction": 1.0,
             "thickness": 1.0,
-            "color": "0x000a11"
+            "color": "STEELBLUE"
         },
         {
             "name": "wall",
@@ -99,7 +99,7 @@
             "length": 15.0,
             "friction": 1.0,
             "thickness": 1.0,
-            "color": "0x000a11"
+            "color": "STEELBLUE"
         },
         {
             "name": "wall",
@@ -107,7 +107,7 @@
             "length": 15.0,
             "friction": 1.0,
             "thickness": 1.0,
-            "color": "0x000a11"
+            "color": "STEELBLUE"
         },
         {
             "name": "box",
@@ -133,7 +133,7 @@
             "length": 15.0,
             "friction": 1.0,
             "thickness": 1.0,
-            "color": "0x000a11"
+            "color": "STEELBLUE"
         }
     ]
 }

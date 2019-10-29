@@ -44,6 +44,7 @@ params = {
         'no_overlap_env': False,
         'overlap_threshold': 0.3,
         'move_thresh': 0.03,
+        'use_overlap': True,
 
         ######################
         # Action space settings

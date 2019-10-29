@@ -9,8 +9,7 @@ TRAMPOLINE_ELASTICITY = 1.2
 
 
 class Trampoline(Ramp):
-    def __init__(self, pos, length, angle, elasticity=TRAMPOLINE_ELASTICITY,
-        friction=1.0):
+    def __init__(self, pos, length, angle, elasticity=TRAMPOLINE_ELASTICITY, friction=1.0):
         if angle > np.pi/2:
             self.actual_angle = angle + np.pi
         else:
@@ -25,11 +24,11 @@ class Trampoline(Ramp):
     def add_to_space(self, space):
         super().add_to_space(space, use_friction=False)
         self.img = ImageTool('trampoline.png', self.actual_angle,
-        self.pos[:], int(self.length), int(2. * LINE_THICKNESS),
-        debug_render=False,
-        use_shape=self.shape)
+                self.pos[:],
+                debug_render=False,
+                use_shape=self.shape)
 
-    def render(self, screen, scale=None):
+    def render(self, screen, scale=None, anti_alias=False):
         if scale is None:
             scale = 1
 

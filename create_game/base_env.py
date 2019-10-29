@@ -37,6 +37,7 @@ class BaseEnv(gym.Env):
         self.int_frames = None
 
         self.is_setup = False
+        self.viewer = None
 
     def set_settings(self, settings):
         """
@@ -50,9 +51,6 @@ class BaseEnv(gym.Env):
         self.screen = pygame.display.set_mode((self.settings.screen_width,
                                                self.settings.screen_height))
         self.scale = self.settings.high_res_width/self.settings.screen_width
-
-        self.scaled_width = self.settings.high_res_width
-        self.scaled_height = self.settings.high_res_height
 
         self.fps = 30.0
 
@@ -286,6 +284,10 @@ class BaseEnv(gym.Env):
         """
         Render all currently placed objects to the scene.
         """
+        prev_mode = '%s' % mode
+        if prev_mode == 'human':
+            mode='rgb_array_high'
+
         self._check_setup()
 
         if self.int_frames is not None and self.settings.evaluation_mode and 'mega' in mode:
@@ -293,11 +295,13 @@ class BaseEnv(gym.Env):
             self.int_frames = None
             return tmp
 
+        anti_alias = 'mega' in mode
+
         # Clear the screen
         # Note 'low' resolution also uses 'high' in mode
         if 'high' in mode:
             self.screen = pygame.display.set_mode(
-                (self.scaled_width, self.scaled_height))
+                (self.settings.high_res_width, self.settings.high_res_height))
         self.screen.fill(THECOLORS["white"])
 
         render_objs = self.get_all_objs()
@@ -308,7 +312,8 @@ class BaseEnv(gym.Env):
                 render_obj.set_alpha = 70 + \
                     (i+1) * (150 - 70)/len(self.marker_ball_traces)
                 if 'high' in mode:
-                    render_obj.render(self.screen, scale=self.scale)
+                    render_obj.render(self.screen, scale=self.scale,
+                            anti_alias=anti_alias)
                 else:
                     render_obj.render(self.screen)
 
@@ -317,7 +322,8 @@ class BaseEnv(gym.Env):
                 render_obj.set_alpha = 120 + \
                     (i+1) * (220 - 120)/len(self.target_ball_traces)
                 if 'high' in mode:
-                    render_obj.render(self.screen, scale=self.scale)
+                    render_obj.render(self.screen, scale=self.scale,
+                            anti_alias=anti_alias)
                 else:
                     render_obj.render(self.screen)
 
@@ -326,21 +332,24 @@ class BaseEnv(gym.Env):
                 if render_black_box:
                     render_obj.render_black_box(self.screen)
                 elif 'high' in mode:
-                    render_obj.render(self.screen, self.scale)
+                    render_obj.render(self.screen, self.scale,
+                            anti_alias=anti_alias)
                 else:
                     render_obj.render(self.screen)
 
             # Marker Ball Line Traces
             for i, render_obj in enumerate(self.marker_line_traces):
                 if 'high' in mode:
-                    render_obj.render(self.screen, scale=self.scale)
+                    render_obj.render(self.screen, scale=self.scale,
+                            anti_alias=anti_alias)
                 else:
                     render_obj.render(self.screen)
 
             # Target Ball Line Traces
             for i, render_obj in enumerate(self.target_line_traces):
                 if 'high' in mode:
-                    render_obj.render(self.screen, scale=self.scale)
+                    render_obj.render(self.screen, scale=self.scale,
+                            anti_alias=anti_alias)
                 else:
                     render_obj.render(self.screen)
 
@@ -349,7 +358,8 @@ class BaseEnv(gym.Env):
                 if render_black_box:
                     render_obj.render_black_box(self.screen)
                 elif 'high' in mode:
-                    render_obj.render(self.screen, self.scale)
+                    render_obj.render(self.screen, self.scale,
+                            anti_alias=anti_alias)
                 else:
                     render_obj.render(self.screen)
 
@@ -386,7 +396,15 @@ class BaseEnv(gym.Env):
         if 'high' in mode:
             self.screen = pygame.display.set_mode(
                 (self.settings.screen_width, self.settings.screen_height))
-        return frame
+
+        if prev_mode == 'human':
+            from gym.envs.classic_control import rendering
+            if self.viewer is None:
+                self.viewer = rendering.SimpleImageViewer()
+            self.viewer.imshow(frame)
+            return self.viewer.isopen
+        else:
+            return frame
 
     def _convert_color(self, image, from_color, to_color):
         image = image.copy()

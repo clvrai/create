@@ -98,6 +98,7 @@ class ToolTypes(Enum):
     FAST_LADDER = 'fast_ladder'
     BASKET = 'basket'
     GOAL_BALL = 'goal_ball'
+    GOAL_STAR = 'goal_star'
 
 
 
@@ -196,6 +197,7 @@ class ToolFactory(object):
 
                 # Moving Goal
                 ToolTypes.GOAL_BALL: GoalBall,
+                ToolTypes.GOAL_STAR: GoalStar
             }
 
     def set_settings(self, settings):

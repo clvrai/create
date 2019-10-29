@@ -1,5 +1,5 @@
 import numpy as np
-from .logic_level_file import LogicLevelFile
+from .create_level_file import CreateLevelFile
 
 def ball_begin_handler(arbiter, space, data):
     obj_1 = arbiter.shapes[1]
@@ -12,7 +12,7 @@ def ball_begin_handler(arbiter, space, data):
     return True
 
 
-class LogicGameMarker(LogicLevelFile):
+class CreateGameMarker(CreateLevelFile):
     """
     Defines additional behavior in logic game for when there is another ball
     that must first collide with the target ball. We call this the "Marker"

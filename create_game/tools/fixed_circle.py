@@ -3,7 +3,6 @@ import pymunk
 import pygame as pg
 from pygame import gfxdraw
 
-from .img_tool import ImageTool
 
 
 class FixedCircle(FixedObj):
@@ -27,17 +26,19 @@ class FixedCircle(FixedObj):
     def get_shape(self):
         return self.shape
 
-    def render(self, screen, scale=None):
+    def render(self, screen, scale=None, anti_alias=False):
         if scale is None:
             scale = 1
         draw_pos = scale * self.flipy(self.pos)
         draw_pos[0] = int(draw_pos[0])
         draw_pos[1] = int(draw_pos[1])
 
-        # pg.draw.circle(screen, pg.Color(self.color), draw_pos,
-        #     int(self.radius * scale))
-        gfxdraw.filled_circle(screen, draw_pos[0], draw_pos[1], int(self.radius * scale), pg.Color(self.color))
-        gfxdraw.aacircle(screen, draw_pos[0], draw_pos[1], int(self.radius * scale), pg.Color(self.color))
+        if anti_alias:
+            gfxdraw.filled_circle(screen, draw_pos[0], draw_pos[1], int(self.radius * scale), pg.Color(self.color))
+            gfxdraw.aacircle(screen, draw_pos[0], draw_pos[1], int(self.radius * scale), pg.Color(self.color))
+        else:
+            pg.draw.circle(screen, pg.Color(self.color), draw_pos,
+                int(self.radius * scale))
 
 
 class BouncyCircle(FixedCircle):

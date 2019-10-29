@@ -50,11 +50,6 @@ def get_allowed_actions(settings, tool_gen):
     return overall_aval_actions
 
 def split_action_set(test_set, validation_ratio):
-    """
-    TODO: This function should be removed and it should be incorperated into
-    the env interface class to provide common behavior for action set loading
-    to all environments
-    """
     # split in a predictable way
     rng = np.random.RandomState(41)
 

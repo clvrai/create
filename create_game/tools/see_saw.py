@@ -50,7 +50,7 @@ class HingeSeg(BasicObj):
 
         register_fric_shape(self.seg, self.friction, space, True)
 
-    def render(self, screen, scale=None):
+    def render(self, screen, scale=None, anti_alias=False):
         if scale is None:
             scale = 1
 
@@ -144,16 +144,14 @@ class SeeSaw(HingeSlideSeg):
         self.attached_constraints.extend([self.pivot_joint, self.gear_joint])
 
 
-    def render(self, screen, scale=1):
-
+    def render(self, screen, scale=1, anti_alias=False):
         super().render(screen, scale)
         draw_radius = int(scale * self.weight_radius)
 
         center = scale * self.flipy(self.weight.position)
-        # pg.draw.circle(screen,
-        #     # pg.Color(self.color),
-        #     pg.Color(hinge_color),
-        #     (int(center.x), int(center.y)),
-        #     draw_radius)
-        gfxdraw.filled_circle(screen, int(center.x), int(center.y), draw_radius, pg.Color(hinge_color))
-        gfxdraw.aacircle(screen, int(center.x), int(center.y), draw_radius, pg.Color(self.color))
+
+        if anti_alias:
+            gfxdraw.filled_circle(screen, int(center.x), int(center.y), draw_radius, pg.Color(hinge_color))
+            gfxdraw.aacircle(screen, int(center.x), int(center.y), draw_radius, pg.Color(self.color))
+        else:
+            pg.draw.circle(screen, pg.Color(hinge_color), (int(center.x), int(center.y)), draw_radius)

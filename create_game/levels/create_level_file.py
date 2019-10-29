@@ -6,9 +6,10 @@ from numpy.random import uniform
 from collections import defaultdict
 from ..tools.goal import GOAL_RADIUS
 from ..tools.segment import LINE_THICKNESS
+from ..constants import with_subgoals
 
 # Ball FLOOR OFFSET
-OFFSET = (2. * GOAL_RADIUS + LINE_THICKNESS) / 1.0
+OFFSET = 0.11
 LIGHT_BOX_MASS = 1.0
 DEF_NOISE = 0.05
 HIGH_NOISE = 0.2
@@ -24,15 +25,13 @@ def get_noise(rnd_map, name):
         return 0.0
 
 
-class LogicLevelFile(CreateGame):
+class CreateLevelFile(CreateGame):
     def __init__(self, ):
         super().__init__()
         self.rnd_map = {}
 
     def set_settings(self, settings):
         super().set_settings(settings)
-        global OFFSET
-        OFFSET = OFFSET / settings.screen_width
 
         self.load_file()
         reward_type = self.get_reward_type()
@@ -69,7 +68,7 @@ class LogicLevelFile(CreateGame):
         tools = []
 
         marker_sec_goals = []
-        if 'marker_sec_goals' in self.jf:
+        if 'marker_sec_goals' in self.jf and with_subgoals:
             for marker_sec_goal in self.jf['marker_sec_goals']:
                 pos = eval(marker_sec_goal)
                 marker_sec_goals.append(tool_factory.create(ToolTypes.GOAL, pos,
@@ -79,7 +78,7 @@ class LogicLevelFile(CreateGame):
         self.marker_sec_goals = marker_sec_goals
 
         target_sec_goals = []
-        if 'target_sec_goals' in self.jf:
+        if 'target_sec_goals' in self.jf and with_subgoals:
             for target_sec_goal in self.jf['target_sec_goals']:
                 pos = eval(target_sec_goal)
                 target_sec_goals.append(tool_factory.create(ToolTypes.GOAL, pos,
@@ -97,12 +96,13 @@ class LogicLevelFile(CreateGame):
 
             name = env_tool['name']
             pos = np.array(env_tool['pos'])
+            lookup_name = name + ''
             if 'id' in env_tool:
                 tool_id = env_tool['id']
                 lookup_name = name + ':' + str(tool_id)
-                noise = get_noise(self.eval_rnd_map, lookup_name)
+            noise = get_noise(self.eval_rnd_map, lookup_name)
 
-                pos += noise
+            pos += noise
             pass_params = {k: v for k, v in env_tool.items() if k not in ['name','pos', 'id']}
 
             tool_type = tool_name_mapping[name]
@@ -155,7 +155,8 @@ class LogicLevelFile(CreateGame):
         """
         eval_rnd_map = {}
         for k, v in self.rnd_map.items():
-            objs = k.split(',')
+            objs = k.replace(' ', '')
+            objs = objs.split(',')
             eval_v = eval(v)
             for obj in objs:
                 eval_rnd_map[obj] = eval_v

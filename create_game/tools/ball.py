@@ -1,5 +1,5 @@
 from .gravity_obj import GravityObj, MOVING_OBJ_COLLISION_TYPE
-from .goal import GOAL_RADIUS
+from .goal import GOAL_RADIUS, goal_target_begin_handler
 from pymunk import Body
 import pymunk
 import pygame as pg
@@ -34,8 +34,8 @@ class Ball(GravityObj):
         if color == 'basketball':
             img_file = 'basketball.png'
             self.img = ImageTool(img_file, angle=0, pos=pos[:],
-                length=2 * radius, height=2 * radius, debug_render=False,
-                use_shape=self.shape)
+                            use_shape=self.shape,
+                             debug_render=False)
 
         self.is_trace = False
         self.scale_radius = 1
@@ -48,7 +48,7 @@ class Ball(GravityObj):
     def get_shape(self):
         return self.shape
 
-    def render(self, screen, scale=1):
+    def render(self, screen, scale=1, anti_alias=False):
         if self.color == 'basketball':
             self.img.render(screen, scale, self.flipy)
         else:
@@ -71,20 +71,23 @@ class Ball(GravityObj):
                     pg.draw.line(surface, pg.Color(self.color), prev_draw_pos,
                         draw_pos, 2)
                 else:
-                    # pg.draw.circle(surface, pg.Color(self.color), draw_pos, draw_radius)
-                    gfxdraw.aacircle(screen, draw_pos[0], draw_pos[1], draw_radius, pg.Color(self.color))
-                    gfxdraw.filled_circle(screen, draw_pos[0], draw_pos[1], draw_radius, pg.Color(self.color))
+                    if anti_alias:
+                        gfxdraw.aacircle(screen, draw_pos[0], draw_pos[1], draw_radius, pg.Color(self.color))
+                        gfxdraw.filled_circle(screen, draw_pos[0], draw_pos[1], draw_radius, pg.Color(self.color))
+                    else:
+                        pg.draw.circle(surface, pg.Color(self.color), draw_pos, draw_radius)
 
 
                 screen.blit(surface, (0,0))
             else:
                 draw_radius = int(scale * self.radius)
-                # pg.draw.circle(screen, pg.Color(self.color),
-                #     draw_pos, draw_radius)
-                # pg.gfxdraw.circle(screen, pg.Color(self.color),
-                #     draw_pos, draw_radius)
-                gfxdraw.filled_circle(screen, draw_pos[0], draw_pos[1], draw_radius, pg.Color(self.color))
-                gfxdraw.aacircle(screen, draw_pos[0], draw_pos[1], draw_radius, pg.Color(self.color))
+                if anti_alias:
+                    gfxdraw.filled_circle(screen, min(draw_pos[0], 32767),
+                            min(draw_pos[1], 32767), draw_radius, pg.Color(self.color))
+                    gfxdraw.aacircle(screen, min(draw_pos[0], 32767),
+                            min(draw_pos[1], 32767), draw_radius, pg.Color(self.color))
+                else:
+                    pg.draw.circle(screen, pg.Color(self.color), draw_pos, draw_radius)
 
     def render_black_box(self, screen):
         self.render(screen)
@@ -103,6 +106,7 @@ class TargetBall(Ball):
 class BasketBall(Ball):
     def __init__(self, pos, color='basketball'):
         super().__init__(pos, mass=10.0, radius=3.5, color=color)
+        self.shape.is_target = True
 
 class TargetBallTest(Ball):
     def __init__(self, pos, color='orange'):
@@ -116,12 +120,6 @@ class TargetBallTest2(Ball):
         self.shape.body.velocity = pymunk.Vec2d(25., -35.)
 
 
-
-def goal_target_begin_handler(arbiter, space, data):
-    if hasattr(arbiter.shapes[0], 'is_target') and arbiter.shapes[0].is_target and \
-        hasattr(arbiter.shapes[1], 'is_goal') and arbiter.shapes[1].is_goal:
-        arbiter.shapes[1].target_contact = True
-    return True
 
 
 class GoalBall(Ball):

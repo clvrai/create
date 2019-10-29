@@ -24,13 +24,17 @@ class Belt(Ramp):
         self.color = color
         self.vel = vel
         self.collision_type = 4
-
+        if vel < 0:
+            self.png = 'belt_left.png'
+        else:
+            self.png = 'belt_right.png'
 
     def add_to_space(self, space):
         super().add_to_space(space, use_friction=False)
-        self.img = ImageTool('conveyer.png', 0.0,
-                self.pos[:], int(self.length), int(LINE_THICKNESS), debug_render=False,
-                use_shape=self.shape)
+        self.img = ImageTool(self.png, 0.0,
+                self.pos[:],
+                use_shape=self.shape,
+                debug_render=False)
 
         belt = self.img.get_shape()
         belt.sensor=True
@@ -42,7 +46,7 @@ class Belt(Ramp):
         h.pre_solve = touching_handler
 
 
-    def render(self, screen, scale=None):
+    def render(self, screen, scale=None, anti_alias=False):
         if scale is None:
             scale = 1
 
@@ -50,5 +54,5 @@ class Belt(Ramp):
 
 
 class RightBelt(Belt):
-    def __init__(self, pos, vel=-4.0):
-        super().__init__(pos, vel=vel)
+    def __init__(self, pos, vel=-4.0, length=20.0, color='black'):
+         super().__init__(pos, vel=vel, length=length, color=color)

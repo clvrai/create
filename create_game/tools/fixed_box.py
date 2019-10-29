@@ -23,7 +23,7 @@ class FixedBox(FixedObj):
     def get_shape(self):
         return self.shape
 
-    def render(self, screen, scale=None):
+    def render(self, screen, scale=None, anti_alias=False):
         if scale is None:
             scale = 1
 
@@ -38,27 +38,46 @@ class FixedBox(FixedObj):
         pg.draw.rect(screen, pg.Color(self.color), draw_rect)
 
 
-class BouncyBox(FixedObj):
-    def __init__(self, pos, size=10.0, friction=1.0, elasticity=1.2, color='slategray'):
-        super().__init__(pos)
-        self.friction = friction
-        self.elasticity = elasticity
-        self.color = color
-
-        self.img = ImageTool('bouncy_square.png', angle=0, pos=pos[:],
-            length=size, height=size, debug_render=False,
-            use_box=True, elasticity=elasticity, friction=friction)
-
-        self.shape = self.img.get_shape()
+class BouncyBox(FixedBox):
+    def __init__(self, pos, size=10.0, friction=1.0, elasticity=1.2, color='blue'):
+        super().__init__(pos, size=size, friction=friction, elasticity=elasticity, color=color)
 
 
-    def get_body(self):
-        return self.shape.body
 
-    def get_shape(self):
-        return self.shape
+class FixedRect(FixedObj):
+     def __init__(self, pos, angle = 0.0, width=10.0, height=10.0, friction=1.0, elasticity = 0.4, color='slategray'):
+         super().__init__(pos)
+         mass = 1.0
+         moment = pymunk.moment_for_box(mass, (width, height))
+         self.body = self._create_body(mass, moment)
+         self.body.position = pymunk.Vec2d(pos[0], pos[1])
 
-    def render(self, screen, scale=None):
+         self.shape = pymunk.Poly.create_box(self.body, (width, height))
+         self.shape.body.angle = angle
+         self.shape.friction = friction
+         self.shape.elasticity = elasticity
+         self.color = color
+         self.width = width
+         self.height = height
+
+     def get_body(self):
+         return self.body
+
+     def get_shape(self):
+         return self.shape
+
+     def render(self, screen, scale=None, anti_alias=False):
         if scale is None:
             scale = 1
-        self.img.render(screen, scale, self.flipy)
+
+        pointlist = []
+        for v in self.shape.get_vertices():
+            x, y = v.rotated(self.shape.body.angle) + self.shape.body.position
+            point = scale * self.flipy([x, y])
+            pointlist.append([int(point[0]), int(point[1])])
+
+        if anti_alias:
+            gfxdraw.filled_polygon(screen, pointlist, pg.Color(self.color))
+            gfxdraw.aapolygon(screen, pointlist, pg.Color(self.color))
+        else:
+            pg.draw.polygon(screen, pg.Color(self.color), pointlist)

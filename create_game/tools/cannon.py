@@ -5,9 +5,12 @@ import pymunk
 import pygame as pg
 import numpy as np
 from .img_tool import ImageTool
+from .fixed_box import FixedRect
 
-CANNON_HEIGHT = 10.0
+CANNON_WIDTH = 10.0
+CANNON_HEIGHT = 7.3
 FAN_HEIGHT = 10.0
+FAN_WIDTH = 6.7
 
 def cannon_begin_handler(arbiter, space, data):
     if arbiter.shapes[0].collision_type == MOVING_OBJ_COLLISION_TYPE:
@@ -33,10 +36,10 @@ def fan_touching_handler(arbiter, space, data):
         return False
     return True
 
-class Cannon(BasicObj):
+class Cannon(FixedRect):
     # 1, 5 pi
     def __init__(self, pos, angle=np.pi/3, force=120.0, color='blue'):
-        super().__init__(pos)
+        super().__init__(pos, CANNON_WIDTH, CANNON_HEIGHT)
         self.angle = angle
         self.color = color
         self.force = force
@@ -44,10 +47,10 @@ class Cannon(BasicObj):
         self.collision_type = 2
 
         self.img = ImageTool('cannon.png', angle, pos[:],
-                CANNON_HEIGHT, CANNON_HEIGHT, debug_render=False,
-                use_circle=True)
+                use_shape=self.shape,
+                debug_render=False)
 
-        self.new_pos = [self.pos[0] + np.cos(angle) * (CANNON_HEIGHT/2),
+        self.new_pos = [self.pos[0] + np.cos(angle) * (CANNON_WIDTH/2),
             self.pos[1] + np.sin(angle) * (CANNON_HEIGHT/2)]
 
 
@@ -63,24 +66,24 @@ class Cannon(BasicObj):
         h = space.add_collision_handler(1, self.collision_type)
         h.begin = cannon_begin_handler
 
-    def render(self, screen, scale=None):
+    def render(self, screen, scale=None, anti_alias=False):
         if scale is None:
             scale = 1
 
         self.img.render(screen, scale, self.flipy)
 
 
-class Fan(BasicObj):
+class Fan(FixedRect):
     # 1, 5 pi
     def __init__(self, pos, angle=np.pi/3, force=120.0, color='blue'):
-        super().__init__(pos)
+        super().__init__(pos, angle, FAN_WIDTH, FAN_HEIGHT)
 
         self.color = color
         self.launch_dir = force * np.array([np.cos(angle), np.sin(angle)])
 
         self.img = ImageTool('fan.png', angle, pos[:],
-                FAN_HEIGHT, FAN_HEIGHT, debug_render=False,
-                use_circle=True)
+                use_shape=self.shape,
+                debug_render=False)
         self.collision_type = 3
 
 
@@ -97,7 +100,7 @@ class Fan(BasicObj):
         h.pre_solve = fan_touching_handler
 
 
-    def render(self, screen, scale=None):
+    def render(self, screen, scale=None, anti_alias=False):
         if scale is None:
             scale = 1
 
