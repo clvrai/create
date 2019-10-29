@@ -19,7 +19,7 @@ Try solving tasks for yourself on the [online demo](http://lim-e.usc.edu:8080/cr
 `gym.make('CreateLevelPush-v0')` with the name of the task you want to use. CREATE features 10 diverse default tasks which can be seen in the "Included Tasks" section. You can easily create more using the simple JSON definition system. 
 Some level of stochasicity is applied in all of the default environments. If you don't want to use any stochasicity specify `Det` after the name of the level like: `gym.make('CreateLevelPushDet-v0')`. 
 
-See [`examples/random_agent.py`](https://github.com/gitlimlab/CREATE/blob/master/examples/random_agent.py) for an example with using a random agent on the environment. 
+See [`examples/random_agent.py`](https://github.com/gitlimlab/CREATE/blob/master/examples/random_agent.py) for an example with using a random agent on the environment. This environment also works well with multi-processing. An example of this will be posted soon. 
 
 ## Installation
 Clone this repository. `pip install -r requirements.txt` from this repo. Copy the `create_game` folder to where you want to use it. Note this project only works with Python 3.6+. 
