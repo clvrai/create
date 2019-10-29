@@ -7,6 +7,13 @@ from .constants import placed_wall_color
 
 from .settings import CreateGameSettings
 
+class SampleDict(Dict):
+    def sample(self):
+        rnd_pos = self.spaces['pos'].sample()
+        rnd_sel = self.spaces['index'].sample()
+        return [rnd_sel, *rnd_pos]
+
+
 class CreateGame(BaseEnv):
     def __init__(self):
         self.place_walls = False
@@ -31,7 +38,7 @@ class CreateGame(BaseEnv):
         self.no_action_space_resample = False
 
         # place holder action space.
-        self.action_space = Dict({
+        self.action_space = SampleDict({
             'index': Discrete(1),
             'pos': Box(low=-1.0, high=1.0, shape=(2,), dtype=np.float32)
         })
@@ -73,7 +80,7 @@ class CreateGame(BaseEnv):
 
     def update_available_tools(self, tools):
         self.inventory = tools
-        self.action_space = Dict({
+        self.action_space = SampleDict({
             # select any one of our tools
             'index': Discrete(len(tools)),
             # x, y between -1.0 and 1.0
@@ -275,8 +282,8 @@ class CreateGame(BaseEnv):
             reward += self.settings.blocked_action_reward
             self.overlap_action_count += 1
         else:
-            tool = self.tool_gen.get_tool(
-                use_tool_type, action_pos)
+            tool = self.tool_gen.get_tool(use_tool_type, action_pos,
+                    self.settings)
             all_objs = self.get_all_objs()
             tool.add_to_space(self.space)
             if self.check_collisions(tool, action_pos, all_objs):

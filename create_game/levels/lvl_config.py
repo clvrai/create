@@ -36,19 +36,19 @@ def _parse_json_obj(jf, jf_str):
     exec('globals()["%s"] = %s' % (rnd_lvl_name, rnd_lvl_name))
     exec('globals()["%s"] = %s' % (other_rnd_lvl_name, other_rnd_lvl_name))
 
-    base_package_loc = 'envs.create_game'
+    base_package_loc = __name__
 
     register(
         id=lvl_name + '-v0',
-        entry_point = base_package_loc + '.levels.lvl_config:' + lvl_name
+        entry_point = base_package_loc + ':' + lvl_name
     )
     register(
         id=rnd_lvl_name + '-v0',
-        entry_point = base_package_loc + '.levels.lvl_config:' + rnd_lvl_name
+        entry_point = base_package_loc + ':' + rnd_lvl_name
     )
     register(
         id=other_rnd_lvl_name + '-v0',
-        entry_point = base_package_loc + '.levels.lvl_config:' + other_rnd_lvl_name
+        entry_point = base_package_loc + ':' + other_rnd_lvl_name
     )
 
 def register_json_folder(json_folder):
