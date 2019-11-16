@@ -1,7 +1,6 @@
 # Chain REAction Tool Environment (CREATE)
-[[Environment website]()]   [[Paper](https://www.clvrai.com)]   
 [Ayush Jain](), [Andrew Szot](), [Joseph J. Lim](https://clvrai.com) at [USC CLVR lab](https://clvrai.com)  
-
+[[Environment website]()]   [[Paper](https://www.clvrai.com)]   
 
 <p align="center">
      <kbd>
