@@ -25,15 +25,19 @@ Try solving tasks for yourself on the [online demo](http://lim-e.usc.edu:8080/cr
 Some level of stochasicity is applied in all of the default environments. If you don't want to use any stochasicity specify `Det` after the name of the level like: `gym.make('CreateLevelPushDet-v0')`. 
 
 See [`examples/random_agent.py`](https://github.com/gitlimlab/CREATE/blob/master/examples/random_agent.py) for an example with using a random agent on the environment. This environment also works well with multi-processing, an example will be posted soon. 
+<br>
 
 ## (2) Installation
 Clone this repository. `pip install -r requirements.txt` from this repo. Copy the `create_game` folder to where you want to use it. Note this project only works with Python 3.6+. 
+<br>
 
 ## (3) Multi-Task
 See [`examples/multi_task.py`](https://github.com/gitlimlab/CREATE/blob/master/examples/multi_task.py) for a complete example. 
+<br>
 
 ## (4) Game Configuration
 See [`create_game/settings.py`](https://github.com/gitlimlab/CREATE/blob/master/create_game/settings.py) for a list of all possible settings that can be changed about the game play, rendering, reward structure and simulation. Configure the environment as: 
+<br>
 
 ## (5) Defining Tasks
 See [`examples/create_task.ipynb`](https://github.com/gitlimlab/CREATE/blob/master/examples/create_task.ipynb) for an example on how to define custom tasks. 
@@ -83,6 +87,7 @@ import gym
 env = gym.create('CreateLevelPush-v0')
 env.set_settings(CreateGameSettings(max_num_steps=5, action_set_size=10))
 ```
+<br>
 
 ## (6) Included Tasks
 
@@ -94,6 +99,7 @@ env.set_settings(CreateGameSettings(max_num_steps=5, action_set_size=10))
 | Moving (`CreateLevelMoving`)  | <img src="github-assets/moving.gif" width="400">  | Navigate (`CreateLevelNavigate`)  | <img src="github-assets/navigate.gif" width="400">  |
 | Obstacle (`CreateLevelObstacle`)  | <img src="github-assets/obstacle.gif" width="400">  | Push (`CreateLevelPush`)  | <img src="github-assets/push.gif" width="400">  |
 | Seesaw (`CreateLevelSeesaw`)  | <img src="github-assets/seesaw.gif" width="400">  | | |
+<br>
 
 ## (7) Citation
 ```
