@@ -1,4 +1,7 @@
 # Chain REAction Tool Environment (CREATE)
+[[Environment website]()]   [[Paper](https://www.clvrai.com)]   
+[Ayush Jain](), [Andrew Szot](), [Joseph J. Lim](https://clvrai.com) at [USC CLVR lab](https://clvrai.com)  
+
 
 <p align="center">
      <kbd>
@@ -17,23 +20,23 @@ Features:
 
 Try solving tasks for yourself on the [online demo](http://lim-e.usc.edu:8080/create/). Or get started with some [examples](https://github.com/gitlimlab/CREATE/tree/master/examples).
 
-## Usage
+## (1) Usage
 `import create_game` to register the environments. From here, create the gym environment using the standard command: 
 `gym.make('CreateLevelPush-v0')` with the name of the task you want to use. CREATE features 10 diverse default tasks which can be seen in the "Included Tasks" section. You can easily create more using the simple JSON definition system. 
 Some level of stochasicity is applied in all of the default environments. If you don't want to use any stochasicity specify `Det` after the name of the level like: `gym.make('CreateLevelPushDet-v0')`. 
 
 See [`examples/random_agent.py`](https://github.com/gitlimlab/CREATE/blob/master/examples/random_agent.py) for an example with using a random agent on the environment. This environment also works well with multi-processing, an example will be posted soon. 
 
-## Installation
+## (2) Installation
 Clone this repository. `pip install -r requirements.txt` from this repo. Copy the `create_game` folder to where you want to use it. Note this project only works with Python 3.6+. 
 
-## Multi-Task
+## (3) Multi-Task
 See [`examples/multi_task.py`](https://github.com/gitlimlab/CREATE/blob/master/examples/multi_task.py) for a complete example. 
 
-## Game Configuration
+## (4) Game Configuration
 See [`create_game/settings.py`](https://github.com/gitlimlab/CREATE/blob/master/create_game/settings.py) for a list of all possible settings that can be changed about the game play, rendering, reward structure and simulation. Configure the environment as: 
 
-## Defining Tasks
+## (5) Defining Tasks
 See [`examples/create_task.ipynb`](https://github.com/gitlimlab/CREATE/blob/master/examples/create_task.ipynb) for an example on how to define custom tasks. 
 
 You can also create custom tasks in CREATE with ease. Simply define the level in JSON and you are good to go. 
@@ -82,18 +85,19 @@ env = gym.create('CreateLevelPush-v0')
 env.set_settings(CreateGameSettings(max_num_steps=5, action_set_size=10))
 ```
 
-## Included Tasks
+## (6) Included Tasks
 
-| Task Description  | Task Example |
-| ------------- | ------------- |
-| Basket (`CreateLevelBasket`)  | <img src="github-assets/basket.gif" width="400">  |
-| Belt (`CreateLevelBelt`)  | <img src="github-assets/belt.gif" width="400">  |
-| Buckets (`CreateLevelBuckets`)  | <img src="github-assets/buckets.gif" width="400">  |
-| Cannon (`CreateLevelCannon`)  | <img src="github-assets/cannon.gif" width="400">  |
-| Collide (`CreateLevelCollide`)  | <img src="github-assets/collide.gif" width="400">  |
-| Ladder (`CreateLevelLadder`)  | <img src="github-assets/ladder.gif" width="400">  |
-| Moving (`CreateLevelMoving`)  | <img src="github-assets/moving.gif" width="400">  |
-| Navigate (`CreateLevelNavigate`)  | <img src="github-assets/navigate.gif" width="400">  |
-| Obstacle (`CreateLevelObstacle`)  | <img src="github-assets/obstacle.gif" width="400">  |
-| Push (`CreateLevelPush`)  | <img src="github-assets/push.gif" width="400">  |
-| Seesaw (`CreateLevelSeesaw`)  | <img src="github-assets/seesaw.gif" width="400">  |
+| Task Description  | Task Example | Task Description  | Task Example |
+| ------------- | ------------- | ------------- | ------------- |
+| Basket (`CreateLevelBasket`)  | <img src="github-assets/basket.gif" width="400">  | Belt (`CreateLevelBelt`)  | <img src="github-assets/belt.gif" width="400">  |
+| Buckets (`CreateLevelBuckets`)  | <img src="github-assets/buckets.gif" width="400">  | Cannon (`CreateLevelCannon`)  | <img src="github-assets/cannon.gif" width="400">  |
+| Collide (`CreateLevelCollide`)  | <img src="github-assets/collide.gif" width="400">  | Ladder (`CreateLevelLadder`)  | <img src="github-assets/ladder.gif" width="400">  |
+| Moving (`CreateLevelMoving`)  | <img src="github-assets/moving.gif" width="400">  | Navigate (`CreateLevelNavigate`)  | <img src="github-assets/navigate.gif" width="400">  |
+| Obstacle (`CreateLevelObstacle`)  | <img src="github-assets/obstacle.gif" width="400">  | Push (`CreateLevelPush`)  | <img src="github-assets/push.gif" width="400">  |
+| Seesaw (`CreateLevelSeesaw`)  | <img src="github-assets/seesaw.gif" width="400">  | | |
+
+## (7) Citation
+```
+@inproceedings{
+}
+```
