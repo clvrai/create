@@ -1,6 +1,6 @@
 # Chain REAction Tool Environment (CREATE)
-[Ayush Jain](), [Andrew Szot](), [Joseph J. Lim](https://clvrai.com) at [USC CLVR lab](https://clvrai.com)  
-[[Environment website]()]   [[Paper](https://www.clvrai.com)]   
+[Ayush Jain](http://www-scf.usc.edu/~ayushj/)\*, [Andrew Szot](https://www.andrewszot.com)\*, [Joseph J. Lim](https://clvrai.com) at [USC CLVR lab](https://clvrai.com)  
+[[Environment website](https://www.clvrai.com/create)]   [[Paper](https://www.clvrai.com)]
 
 <p align="center">
      <kbd>
@@ -17,7 +17,7 @@ Features:
 - **Configurable:** Easily create new levels with a simple JSON interface and create new tools. 
 - **Easily usable:** Environment is a standard [OpenAI Gym](https://github.com/openai/gym) environment interface. 
 
-Try solving tasks for yourself on the [online demo](http://lim-e.usc.edu:8080/create/). Or get started with some [examples](https://github.com/gitlimlab/CREATE/tree/master/examples).
+Try solving tasks for yourself on the [online demo](https://clvrai.com/create/). Or get started with some [examples](https://github.com/gitlimlab/CREATE/tree/master/examples).
 
 ## (1) Usage
 `import create_game` to register the environments. From here, create the gym environment using the standard command: 
@@ -103,7 +103,7 @@ env.set_settings(CreateGameSettings(max_num_steps=5, action_set_size=10))
 | Collide (`CreateLevelCollide`)  | <img src="github-assets/collide.gif" width="400">  | Ladder (`CreateLevelLadder`)  | <img src="github-assets/ladder.gif" width="400">  |
 | Moving (`CreateLevelMoving`)  | <img src="github-assets/moving.gif" width="400">  | Navigate (`CreateLevelNavigate`)  | <img src="github-assets/navigate.gif" width="400">  |
 | Obstacle (`CreateLevelObstacle`)  | <img src="github-assets/obstacle.gif" width="400">  | Push (`CreateLevelPush`)  | <img src="github-assets/push.gif" width="400">  |
-| Seesaw (`CreateLevelSeesaw`)  | <img src="github-assets/seesaw.gif" width="400">  | | |
+| Seesaw (`CreateLevelSeesaw`)  | <img src="github-assets/seesaw.gif" width="400">  | Funnel (`CreateLevelFunnel`) | <img src="github-assets.funnel.gif" width="400">  |
 
 <br>
 
