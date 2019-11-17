@@ -103,7 +103,7 @@ env.set_settings(CreateGameSettings(max_num_steps=5, action_set_size=10))
 | Collide (`CreateLevelCollide`)  | <img src="github-assets/collide.gif" width="400">  | Ladder (`CreateLevelLadder`)  | <img src="github-assets/ladder.gif" width="400">  |
 | Moving (`CreateLevelMoving`)  | <img src="github-assets/moving.gif" width="400">  | Navigate (`CreateLevelNavigate`)  | <img src="github-assets/navigate.gif" width="400">  |
 | Obstacle (`CreateLevelObstacle`)  | <img src="github-assets/obstacle.gif" width="400">  | Push (`CreateLevelPush`)  | <img src="github-assets/push.gif" width="400">  |
-| Seesaw (`CreateLevelSeesaw`)  | <img src="github-assets/seesaw.gif" width="400">  | Funnel (`CreateLevelFunnel`) | <img src="github-assets.funnel.gif" width="400">  |
+| Seesaw (`CreateLevelSeesaw`)  | <img src="github-assets/seesaw.gif" width="400">  | Funnel (`CreateLevelFunnel`) | <img src="github-assets/funnel.gif" width="400">  |
 
 <br>
 
