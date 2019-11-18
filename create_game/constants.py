@@ -27,7 +27,7 @@ goal_color = '0x7cfd2e'
 sensor_wall_color = '0xffffff'
 
 # placed_wall_color = '0x472d30'
-placed_wall_color = '0x000a11'
+placed_wall_color = 'LIGHTSTEELBLUE'
 
 solid_frame_color = None
 blank_frame_color = None

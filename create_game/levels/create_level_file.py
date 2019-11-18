@@ -6,7 +6,8 @@ from numpy.random import uniform
 from collections import defaultdict
 from ..tools.goal import GOAL_RADIUS
 from ..tools.segment import LINE_THICKNESS
-from ..constants import with_subgoals
+from ..constants import *
+import random
 
 # Ball FLOOR OFFSET
 OFFSET = 0.11
@@ -167,7 +168,7 @@ class CreateLevelFile(CreateGame):
         """
         Called every reset by the environment.
         """
-        if 'max_num_steps' in self.jf:
+        if 'max_num_steps' in self.jf and not self.settings.override_level_settings:
             self.max_num_steps = self.jf['max_num_steps']
         if 'marker_must_hit' in self.jf:
             self.marker_must_hit = self.jf['marker_must_hit']
@@ -183,11 +184,8 @@ class CreateLevelFile(CreateGame):
             self.moving_goal = self.jf['moving_goal']
         if 'target_ball_radius' in self.jf:
             self.target_ball_radius = self.jf['target_ball_radius']
-        if 'max_num_steps' in self.jf:
-            self.max_num_steps = self.jf['max_num_steps']
 
         if self.task_id is None or self.eval_rnd_map is None:
-            print('generating noise map')
             self.eval_rnd_map = self.gen_noise_apply_map()
 
         target_pos = self.gen_target_pos + get_noise(self.eval_rnd_map, 'target')

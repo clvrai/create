@@ -6,7 +6,7 @@ class CreateGameSettings(object):
     def __init__(self, default_reward=0.01, no_op_reward=0.0, goal_reward=10.0,
             dense_reward_scale=0.0, invalid_action_reward=-0.01,
             blocked_action_reward=-0.01, sec_goal_reward=2.0,
-            sec_goal_radius=6.0, permanent_goal=True, marker_reward='reg',
+            sec_goal_radius=3.0, permanent_goal=True, marker_reward='reg',
             target_reward=1.0, screen_width=84, screen_height=84,
             render_width=84, render_height=84, high_res_width=1024,
             high_res_height=1024, render_ball_traces=False,
@@ -19,7 +19,8 @@ class CreateGameSettings(object):
             action_extra={}, randomized_fixed_set=False,
             split_name='full_clean', split_type=UseSplit.TRAIN,
             action_seg_loc=osp.join(osp.dirname(osp.abspath(__file__)), 'splits'),
-            validation_ratio=0.5, gran_factor=1.0):
+            validation_ratio=0.5, gran_factor=1.0,
+            override_level_settings=False):
 
         ######################
         # Reward modifiers
@@ -63,6 +64,7 @@ class CreateGameSettings(object):
         self.overlap_threshold = overlap_threshold
         self.move_thresh = move_thresh
         self.use_overlap = use_overlap
+        self.override_level_settings = override_level_settings
 
         ######################
         # Action space settings

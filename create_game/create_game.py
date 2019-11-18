@@ -46,6 +46,7 @@ class CreateGame(BaseEnv):
         self.inventory = None
         # just use the defaults
         self.set_settings(CreateGameSettings())
+        self.server_mode = False
 
     def set_settings(self, settings):
         super().set_settings(settings)
@@ -338,6 +339,8 @@ class CreateGame(BaseEnv):
                     # Remove the goal now
                     self.goal_obj.remove_from_space(self.space)
                     self.goal_obj = None
+                if self.server_mode:
+                    done = True
 
         # Add any additional reward based on subgoals or reward signals from
         # derived environments.
