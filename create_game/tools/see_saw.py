@@ -58,15 +58,16 @@ class HingeSeg(BasicObj):
         start = body.position + self.seg.a.rotated(body.angle)
         end = body.position + self.seg.b.rotated(body.angle)
 
-        # p1 = scale * self.flipy(start)
-        # p2 = scale * self.flipy(end)
-        # pg.draw.lines(screen, pg.Color(self.color), False, (p1, p2), int(scale * PLANK_THICKNESS))
+        if anti_alias:
+            pointlist = get_polygon(start, end, PLANK_THICKNESS)
+            pointlist = [scale * self.flipy(x) for x in pointlist]
 
-        pointlist = get_polygon(start, end, PLANK_THICKNESS)
-        pointlist = [scale * self.flipy(x) for x in pointlist]
-
-        gfxdraw.filled_polygon(screen, pointlist, pg.Color(self.color))
-        gfxdraw.aapolygon(screen, pointlist, pg.Color(self.color))
+            gfxdraw.filled_polygon(screen, pointlist, pg.Color(self.color))
+            gfxdraw.aapolygon(screen, pointlist, pg.Color(self.color))
+        else:
+            p1 = scale * self.flipy(start)
+            p2 = scale * self.flipy(end)
+            pg.draw.lines(screen, pg.Color(self.color), False, (p1, p2), int(scale * PLANK_THICKNESS))
 
 
         top = scale * self.flipy(body.position)
@@ -77,9 +78,11 @@ class HingeSeg(BasicObj):
                 (int(left.x) - 1, int(left.y)),
                 (int(right.x), int(right.y))]
 
-        # pg.draw.polygon(screen, pg.Color(self.color), pointlist)
-        gfxdraw.filled_polygon(screen, pointlist, pg.Color(self.color))
-        gfxdraw.aapolygon(screen, pointlist, pg.Color(self.color))
+        if anti_alias:
+            gfxdraw.filled_polygon(screen, pointlist, pg.Color(self.color))
+            gfxdraw.aapolygon(screen, pointlist, pg.Color(self.color))
+        else:
+            pg.draw.polygon(screen, pg.Color(self.color), pointlist)
 
 
 class HingeSlideSeg(HingeSeg):
