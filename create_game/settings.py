@@ -20,7 +20,7 @@ class CreateGameSettings(object):
             split_name='full_clean', split_type=UseSplit.TRAIN,
             action_seg_loc=osp.join(osp.dirname(osp.abspath(__file__)), 'splits'),
             validation_ratio=0.5, gran_factor=1.0,
-            override_level_settings=False):
+            override_level_settings=False, with_subgoals=True):
 
         ######################
         # Reward modifiers
@@ -37,6 +37,7 @@ class CreateGameSettings(object):
         # For marker ball levels
         self.marker_reward = marker_reward
         self.target_reward = target_reward
+        self.with_subgoals = with_subgoals
 
         ######################
         # Render settings

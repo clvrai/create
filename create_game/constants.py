@@ -33,4 +33,3 @@ solid_frame_color = None
 blank_frame_color = None
 
 asset_dir = osp.join(osp.dirname(osp.abspath(__file__)), 'assets_high_res')
-with_subgoals = True

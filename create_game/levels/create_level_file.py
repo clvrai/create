@@ -69,7 +69,7 @@ class CreateLevelFile(CreateGame):
         tools = []
 
         marker_sec_goals = []
-        if 'marker_sec_goals' in self.jf and with_subgoals:
+        if 'marker_sec_goals' in self.jf and self.settings.with_subgoals:
             for marker_sec_goal in self.jf['marker_sec_goals']:
                 pos = eval(marker_sec_goal)
                 marker_sec_goals.append(tool_factory.create(ToolTypes.GOAL, pos,
@@ -79,7 +79,7 @@ class CreateLevelFile(CreateGame):
         self.marker_sec_goals = marker_sec_goals
 
         target_sec_goals = []
-        if 'target_sec_goals' in self.jf and with_subgoals:
+        if 'target_sec_goals' in self.jf and self.settings.with_subgoals:
             for target_sec_goal in self.jf['target_sec_goals']:
                 pos = eval(target_sec_goal)
                 target_sec_goals.append(tool_factory.create(ToolTypes.GOAL, pos,
