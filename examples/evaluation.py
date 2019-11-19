@@ -1,11 +1,11 @@
+from create_game import CreateGameSettings
+import gym
+from create_game import UseSplit
+import numpy as np
 import sys
 # import create game whatever way works best for you
 sys.path.insert(0, '.')
 sys.path.insert(0, '..')
-import numpy as np
-from create_game import UseSplit
-import gym
-from create_game import CreateGameSettings
 
 
 def gen_action_set(settings, tool_gen, allowed_actions, rng):
@@ -27,7 +27,10 @@ use_settings = CreateGameSettings(
 
 eval_lvls = ['CreateLevelPush-v0',
              'CreateLevelNavigate-v0', 'CreateLevelObstacle-v0']
-NUM_EVAL_EPISODES = 10
+
+# Our paper evaluated over 1600*32 episodes. 1600 episodes across 32 parallel
+# workers
+NUM_EVAL_EPISODES = 1600*32
 
 for eval_lvl in eval_lvls:
     env = gym.make(eval_lvl)
