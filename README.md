@@ -8,24 +8,32 @@
      </kbd>
 </p>
 
-CREATE is a multi-step physics based puzzle reinforcement learning benchmark featuring many diverse tools. The goal of the game is to get the red ball (the target ball) to the blue ball (the goal ball). The agent must select which tool to place and where to place it. To solve the task multiple tools need to be placed. 
-
-Features:
-- **Tool usage and reasoning:** Choose which tool to select and where to place it. 
-- **Multi-step:** reinforcment learning in precise **physics based environments**.
-- **Task generalization:** 10 included tasks with randomized configurations of each task. 
-- **Configurable:** Easily create new levels with a simple JSON interface and create new tools. 
-- **Easily usable:** Environment is a standard [OpenAI Gym](https://github.com/openai/gym) environment interface. 
+**CREATE** is a multi-step physics-based puzzle reinforcement learning benchmark featuring many diverse tools and tasks. The objective is to sequentially select and position tools from an available set, to make the red ball (target) reach the goal (green) in various environment configurations.
 
 Try solving tasks for yourself on the [online demo](https://clvrai.com/create/). Or get started with some [examples](https://github.com/gitlimlab/CREATE/tree/master/examples).
 
+### Features
+- **Multi-step environment**: Agent places a tool after every few iterations of simulation acting on *image* observations. 
+- **Easily usable**: Environment is a standard [OpenAI Gym](https://github.com/openai/gym) environment interface. 
+- **Diverse Tasks**: 12 complex tasks with stochastic variations and an easy <a href="https://github.com/clvrai/CREATE#   defining-tasks">interface</a> to create many more tasks. Suitable for meta reinforcement learning. 
+- **Variety of Tools**: 12 base tool types, with many more variations of sizes, angles, friction parameters. 
+- **Simple and Fast**: Runs headless and supports flexible resolutions for rendering. 
+- **Configurable**: Easily create new levels with a simple JSON interface and create new tools. 
+
+### Relevant Research Areas
+- **Reinforcement Learning for Physical Reasoning**: Long-horizon Physics puzzles with diverse interactions. 
+- **Generalization to Unseen Actions**: Large and diverse action space to test generalization. 
+- **Multi-task Learning**: Diverse task distribution suitable for meta learning. 
+- **Predictive Modeling and Model-based RL**: Consistent environment and tool dynamics for learning models. 
+- **Tool functionality and usage**: Discrete (selection) + Continuous (placement) action space for tools.
+
+
 ## (1) Usage
 `import create_game` to register the environments. From here, create the gym environment using the standard command: 
-`gym.make('CreateLevelPush-v0')` with the name of the task you want to use. CREATE features 10 diverse default tasks which can be seen in the "Included Tasks" section. You can easily create more using the simple JSON definition system. 
-Some level of stochasicity is applied in all of the default environments. If you don't want to use any stochasicity specify `Det` after the name of the level like: `gym.make('CreateLevelPushDet-v0')`. 
+`gym.make('CreateLevelPush-v0')` with the name of the task you want to use. CREATE comes with [12 diverse tasks](#6-included-tasks) and you can easily create more using the simple JSON definition system. 
+Some level of stochasicity is applied in all of the default environments. If you want to use deterministic configurations, specify `Det` after the name of the level like: `gym.make('CreateLevelPushDet-v0')`. 
 
-See [`examples/random_agent.py`](https://github.com/gitlimlab/CREATE/blob/master/examples/random_agent.py) for an example with using a random agent on the environment. This environment also works well with multi-processing, an example will be posted soon. 
-
+See [`examples/random_agent.py`](https://github.com/clvrai/CREATE/blob/master/examples/random_agent.py) for an example with using a random agent on the environment. This environment also works well with multi-processing, and the simulation is optimized for high training speeds.
 <br>
 
 ## (2) Installation
@@ -107,7 +115,14 @@ env.set_settings(CreateGameSettings(max_num_steps=5, action_set_size=10))
 
 <br>
 
-## (7) Citation
+## (7) References
+Our environment is based on Pygame and Pymunk libraries:
+- Pygame: https://www.pygame.org/docs/
+- Pymunk: http://www.pymunk.org/
+
+<br>
+
+## (8) Citation
 ```
 @inproceedings{
 }
