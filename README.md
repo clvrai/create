@@ -10,7 +10,7 @@
 
 **CREATE** is a multi-step physics-based puzzle reinforcement learning benchmark featuring many diverse tools and tasks. The objective is to sequentially select and position tools from an available set, to make the red ball (target) reach the goal (green) in various environment configurations.
 
-Try solving tasks for yourself on the [online demo](https://clvrai.com/create/). Or get started with some [examples](https://github.com/gitlimlab/CREATE/tree/master/examples).
+Try solving tasks for yourself on the [online demo](https://clvrai.com/create/). Or get started with some [examples](https://github.com/clvrai/CREATE/tree/master/examples).
 
 ### Features
 - **Multi-step environment**: Agent places a tool after every few iterations of simulation acting on *image* observations. 
@@ -56,8 +56,8 @@ See [`create_game/settings.py`](https://github.com/gitlimlab/CREATE/blob/master/
 ## (5) Defining Tasks
 See [`examples/create_task.ipynb`](https://github.com/gitlimlab/CREATE/blob/master/examples/create_task.ipynb) for an example on how to define custom tasks. 
 
-You can also create custom tasks in CREATE with ease. Simply define the level in JSON and you are good to go. 
-An example JSON definition of a task is shown below: 
+You can also create custom tasks in CREATE with ease. Simply define the task 'ABC' in JSON and you can use it as `CreateLevelABC-v0`. 
+An example JSON definition of `Moving` task is shown below: 
 ```
 {
      'name' :  'Moving' ,
@@ -79,19 +79,23 @@ An example JSON definition of a task is shown below:
 }
 ```
 
-You can register this JSON file as a gym environment by calling `register_json_folder` passing the name of the folder the JSON files are in. You can also call `register_json_str` to register just one task defined as a string. 
+You can register this JSON file as a gym environment by calling `register_json_folder(...)` passing the name of the folder the JSON files are in. Individual tasks can be registered using `register_json_str(...)`. 
 
-We start by defining the name of the level ('Moving') specify the initial position of the target ball and goal location. The 'rnd' section defines the stochasicity of the starting position for both the target and goal in the scene. In the 'env' section we define all the objects that are in the scene. We would load the level by specifying `gym.make('CreateLevelMoving')` Here are a complete list of options we can specify for the top level fields:
-- `name`: name of the task. This will determine the load name of the task as well. 
+<!--- (We start by defining the name of the level ('Moving') specify the initial position of the target ball and goal location. The 'rnd' section defines the stochasicity of the starting position for both the target and goal in the scene. In the 'env' section we define all the objects that are in the scene. We would load the level by specifying `gym.make('CreateLevelMoving-v0')` Here are a complete list of options we can specify for the top level fields:-->
+
+Screen's coordinate system is centered at (0,0) and both axes lie in [-1, 1]. Top-left corner has coordinate: (1, 1).
+
+Complete list of options we can specify for the top level fields:
+- `name`: name of the task. This corresponds to the name of the environment when loading with gym. 
 - `target`: position of the target ball.
-- `goal`: position of the goal ball.
-- `moving_goal`: `true` if the goal should act as a ball with mass and be able to be moved. If false, the goal does not interact with anything. 
-- `rnd`: The stochasicities for the each object in the level. Note that stochasicity can be applied to multiple objects in the scene at the same time through specifying two names in the field as: 
+- `goal`: position of the goal location or ball.
+- `moving_goal`: `true` for physically movable goal ball. `false` for a static star-shaped goal.
+- `rnd`: specifies stochasticity for each object in the environment. Identical randomness can be applied to multiple objects by having two names in the field as: 
   ```
   'goal,medium_floor:1' :  '[uniform(-0.2, 0.2), uniform(-0.2, 0.2)]'
    ```
-   This stochasicity is then applied the same to the env object with name 'medium_floor' with ID 1 and the goal object. This is useful if you have a platform below a object you want to be randomly initialized and you want to move them together.  
-- `env`: Where all of the environment objects are defined. See [this location in the code](https://github.com/gitlimlab/CREATE/blob/2b68ffcdcc6d03fa0cfcae97963f2576d233c9ff/create_game/tools/tool_factory.py#L37) for the complete list of possible objects. You can also specify parameters to this object such as 'elasticity', 'length' or 'angle'. You can also specify an ID to reference in the rnd noise. 
+   This adds a random variation in [-0.2, 0.2] to each coordinate of `env` object 'medium_floor' with ID 1 and the goal object. This can be useful if a platform-object pair stay together and need to be stochastically initialized.  
+- `env`: all the initial environment objects are defined here. See [complete list of available objects](https://github.com/gitlimlab/CREATE/blob/2b68ffcdcc6d03fa0cfcae97963f2576d233c9ff/create_game/tools/tool_factory.py#L37). You can also specify parameters to these objects such as 'elasticity', 'length' or 'angle'. ID is used by `rnd` to distinguish objects having same name.   
 
 
 ```
