@@ -1,7 +1,7 @@
 import sys
+# Path needs to include the `create_game` folder.
 sys.path.insert(0, '.')
 sys.path.insert(0, '..')
-# import create game whatever way works best for you
 import create_game
 from create_game import CreateGameSettings
 

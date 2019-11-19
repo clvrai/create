@@ -1,11 +1,12 @@
-from create_game import CreateGameSettings
-import gym
-from create_game import UseSplit
-import numpy as np
 import sys
-# import create game whatever way works best for you
+# Path needs to include the `create_game` folder.
 sys.path.insert(0, '.')
 sys.path.insert(0, '..')
+from create_game import UseSplit
+from create_game import CreateGameSettings
+
+import gym
+import numpy as np
 
 
 def gen_action_set(settings, tool_gen, allowed_actions, rng):

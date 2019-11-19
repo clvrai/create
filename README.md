@@ -81,7 +81,7 @@ An example JSON definition of a task is shown below:
 
 You can register this JSON file as a gym environment by calling `register_json_folder` passing the name of the folder the JSON files are in. You can also call `register_json_str` to register just one task defined as a string. 
 
-We start by defining the name of the level ('Moving') specify the initial position of the target ball and goal location. The 'rnd' section defines the stochasicity of the starting position for both the target and goal in the scene. In the 'env' section we define all the objects that are in the scene. We would load the level by specifying `gym.create('CreateLevelMoving')` Here are a complete list of options we can specify for the top level fields:
+We start by defining the name of the level ('Moving') specify the initial position of the target ball and goal location. The 'rnd' section defines the stochasicity of the starting position for both the target and goal in the scene. In the 'env' section we define all the objects that are in the scene. We would load the level by specifying `gym.make('CreateLevelMoving')` Here are a complete list of options we can specify for the top level fields:
 - `name`: name of the task. This will determine the load name of the task as well. 
 - `target`: position of the target ball.
 - `goal`: position of the goal ball.
@@ -98,7 +98,7 @@ We start by defining the name of the level ('Moving') specify the initial positi
 from create_game import CreateGameSettings
 import gym
 
-env = gym.create('CreateLevelPush-v0')
+env = gym.make('CreateLevelPush-v0')
 env.set_settings(CreateGameSettings(max_num_steps=5, action_set_size=10))
 ```
 
