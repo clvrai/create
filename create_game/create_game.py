@@ -47,6 +47,7 @@ class CreateGame(BaseEnv):
         # just use the defaults
         self.set_settings(CreateGameSettings())
         self.server_mode = False
+        self.has_reset = False
 
     def set_settings(self, settings):
         super().set_settings(settings)
@@ -180,6 +181,7 @@ class CreateGame(BaseEnv):
         self.zero_vel_steps = 0
 
         obs = self.render()
+        self.has_reset = True
 
         return obs
 
@@ -261,6 +263,9 @@ class CreateGame(BaseEnv):
         """
         - action: tuple of format (integer between 0 and n_actions - 1, [x_pos, y_pos])
         """
+
+        if not self.has_reset:
+            raise ValueError('Must call reset() on the environment before stepping')
         action_index = int(np.round(action[0]))
         done = False
         reward = self.settings.default_reward
