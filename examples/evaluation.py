@@ -33,11 +33,8 @@ eval_lvls = ['CreateLevelPush-v0',
 
 # Our paper evaluated over 1600*32 episodes. 1600 episodes across 32 parallel
 # workers
-NUM_EVAL_EPISODES = 1600*32
+NUM_EVAL_EPISODES = 1600 * 32
 
-
-def get_action(aval_actions):
-    return
 
 for eval_lvl in eval_lvls:
     env = gym.make(eval_lvl)
@@ -45,17 +42,20 @@ for eval_lvl in eval_lvls:
 
     num_goal_hit = 0.0
 
-    obs = env.reset()
-    # So we can get the initial available actions
-    _, _, _, info = env.step(GET_AVAL_ACTIONS)
-
     for eval_episode_i in range(NUM_EVAL_EPISODES):
+        obs = env.reset()
         ep_reward = 0.0
         done = False
         while not done:
             # Get the action from your policy. You can also incorporate the
-            # indices of the available actions.
-            #aval = info['aval']
+            # indices of the available actions for deciding the action in your
+            # policy.
+            aval = env.get_aval_actions()
+            # This would also work.
+            # _, _, _, info = env.step(GET_AVAL_ACTIONS)
+            # aval = info['aval']
+            # and could be used for multiprocessing environments
+            # where `get_aval_actions` is not accessible.
             action = env.action_space.sample()
             obs, reward, done, info = env.step(action)
             ep_reward += reward

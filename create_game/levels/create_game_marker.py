@@ -53,8 +53,7 @@ class CreateGameMarker(CreateLevelFile):
         # the target ball yet
         target_vel = np.sqrt(sum(self.target_obj.shape.body.velocity ** 2))
         marker_gone = not self.within_bounds(self.marker_obj.body.position)
-        if not done and marker_gone and target_vel < self.settings.min_velocity:
-            self._on_done()
+        if marker_gone and target_vel < self.settings.min_velocity:
             done = True
 
         # Dense reward based off of distance from target ball to the goal
@@ -94,7 +93,6 @@ class CreateGameMarker(CreateLevelFile):
             info['ep_overlap_action'] = self.overlap_action_count
             info['ep_dense_reward'] = self.episode_dense_reward
             info['ep_placed_tools'] = len(self.placed_tools)
-            info['aval'] = self.inventory
 
         return obs, reward, done, info
 
