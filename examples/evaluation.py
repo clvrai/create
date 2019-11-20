@@ -4,6 +4,8 @@ sys.path.insert(0, '.')
 sys.path.insert(0, '..')
 from create_game import UseSplit
 from create_game import CreateGameSettings
+from create_game import GET_AVAL_ACTIONS
+
 
 import gym
 import numpy as np
@@ -33,6 +35,10 @@ eval_lvls = ['CreateLevelPush-v0',
 # workers
 NUM_EVAL_EPISODES = 1600*32
 
+
+def get_action(aval_actions):
+    return
+
 for eval_lvl in eval_lvls:
     env = gym.make(eval_lvl)
     env.set_settings(use_settings)
@@ -41,10 +47,13 @@ for eval_lvl in eval_lvls:
 
     for eval_episode_i in range(NUM_EVAL_EPISODES):
         obs = env.reset()
+        _, _, _, info = env.step(GET_AVAL_ACTIONS)
         ep_reward = 0.0
         done = False
         while not done:
-            # Get the action from your policy
+            # Get the action from your policy. You can also incorporate the
+            # indices of the available actions.
+            #aval = info['aval']
             action = env.action_space.sample()
             obs, reward, done, info = env.step(action)
             ep_reward += reward

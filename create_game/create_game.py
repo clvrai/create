@@ -14,6 +14,7 @@ class SampleDict(Dict):
         return [rnd_sel, *rnd_pos]
 
 
+GET_AVAL_ACTIONS = [-1,-1,-1]
 class CreateGame(BaseEnv):
     def __init__(self):
         self.place_walls = False
@@ -266,7 +267,13 @@ class CreateGame(BaseEnv):
 
         if not self.has_reset:
             raise ValueError('Must call reset() on the environment before stepping')
+
         action_index = int(np.round(action[0]))
+        if action_index == -1:
+            return np.zeros(self.observation_space.shape), 0.0, False, {
+                    'aval': self.inventory
+                    }
+
         done = False
         reward = self.settings.default_reward
         info = {}
