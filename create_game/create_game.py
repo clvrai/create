@@ -49,6 +49,8 @@ class CreateGame(BaseEnv):
         self.set_settings(CreateGameSettings())
         self.server_mode = False
         self.has_reset = False
+        self.did_cache_inventory = False
+        self.episode_len  = 0
 
     def set_settings(self, settings):
         super().set_settings(settings)
@@ -114,8 +116,9 @@ class CreateGame(BaseEnv):
 
     def reset(self):
         self._check_setup()
-        # Set our action space
-        self._generate_inventory()
+        if not self.did_cache_inventory:
+            # Set our action space
+            self._generate_inventory()
 
         # Get the objects in the environment
         env_tools, target_obj, goal_pos = self.get_parts(self.tool_factory)
@@ -267,6 +270,10 @@ class CreateGame(BaseEnv):
 
         if not self.has_reset:
             raise ValueError('Must call reset() on the environment before stepping')
+        if self.episode_len > self.max_num_steps:
+            raise ValueError('Must call reset() after environment returns done=True')
+
+        self.did_cache_inventory = False
 
         action_index = int(np.round(action[0]))
         if action_index == -1:
@@ -382,9 +389,17 @@ class CreateGame(BaseEnv):
             info['ep_dense_reward'] = self.episode_dense_reward
             info['ep_placed_tools'] = len(self.placed_tools)
 
+            self._on_done()
+
         info['aval'] = self.inventory
 
         return obs, reward, done, info
+
+    def _on_done(self):
+        # Generate the inventory for the next episode and return it so the
+        # policy has access to it.
+        self._generate_inventory()
+        self.did_cache_inventory = True
 
     def compute_added_reward(self):
         """

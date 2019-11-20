@@ -14,12 +14,13 @@ env.set_settings(CreateGameSettings(max_num_steps=5))
 
 num_iters = 10
 
-for iter_i in range(num_iters):
-    obs = env.reset()
-    # Will not actually step in the environment. Just gets the available
-    # actions for this episode.
-    _, _, _, info = env.step(GET_AVAL_ACTIONS)
 
+obs = env.reset()
+# Will not actually step in the environment. Just gets the available
+# actions for this episode.
+_, _, _, info = env.step(GET_AVAL_ACTIONS)
+
+for iter_i in range(num_iters):
     done = False
     while not done:
         # Our available actions are always present in info['aval']
@@ -30,3 +31,6 @@ for iter_i in range(num_iters):
             env.render('human')
         except:
             pass
+
+    # The available actions for the next episode are already in `info`.
+    obs = env.reset()

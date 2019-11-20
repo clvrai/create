@@ -45,9 +45,11 @@ for eval_lvl in eval_lvls:
 
     num_goal_hit = 0.0
 
+    obs = env.reset()
+    # So we can get the initial available actions
+    _, _, _, info = env.step(GET_AVAL_ACTIONS)
+
     for eval_episode_i in range(NUM_EVAL_EPISODES):
-        obs = env.reset()
-        _, _, _, info = env.step(GET_AVAL_ACTIONS)
         ep_reward = 0.0
         done = False
         while not done:
@@ -57,6 +59,7 @@ for eval_lvl in eval_lvls:
             action = env.action_space.sample()
             obs, reward, done, info = env.step(action)
             ep_reward += reward
+        obs = env.reset()
 
         num_goal_hit += info['ep_goal_hit']
 
