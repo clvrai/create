@@ -10,7 +10,7 @@
 
 **CREATE** is a multi-step physics-based puzzle reinforcement learning benchmark featuring many diverse tools and tasks. The objective is to sequentially select and position tools from an available set, to make the red ball (target) reach the goal (green) in various environment configurations.
 
-Try solving tasks for yourself on the [online demo](https://clvrai.com/create/). Or get started with some [examples](https://github.com/clvrai/CREATE/tree/master/examples).
+Try solving tasks for yourself on the [online demo](https://clvrai.com/create/). Or get started with some [examples](examples).
 
 ### Features
 - **Multi-step environment**: Agent places a tool after every few iterations of simulation acting on *image* observations. 
@@ -33,9 +33,9 @@ Try solving tasks for yourself on the [online demo](https://clvrai.com/create/).
 `gym.make('CreateLevelPush-v0')` with the name of the task you want to use. CREATE comes with [12 diverse tasks](#6-included-tasks) and you can easily create more using the simple JSON definition system. 
 Some level of stochasicity is applied in all of the default environments. If you want to use deterministic configurations, specify `Det` after the name of the level like: `gym.make('CreateLevelPushDet-v0')`. 
 
-See [`examples/random_agent.py`](https://github.com/clvrai/CREATE/blob/master/examples/random_agent.py) for an example with using a random agent on the environment. This environment also works well with multi-processing, and the simulation is optimized for high training speeds.
+See [`examples/random_agent.py`](examples/random_agent.py) for an example with using a random agent on the environment. This environment also works well with multi-processing, and the simulation is optimized for high training speeds.
 
-For a performance comparison to the method from our paper, use the evaluation script at [`examples/evaluation.py`](https://github.com/clvrai/CREATE/blob/master/examples/evaluation.py). Change the evaluation script to include your models to assess their performance on the test set of tools.
+For a performance comparison to the method from our paper, use the evaluation script at [`examples/evaluation.py`](examples/evaluation.py). Change the evaluation script to include your models to assess their performance on the test set of tools.
 <br>
 
 ## (2) Installation
@@ -44,17 +44,17 @@ Clone this repository. `pip install -r requirements.txt` from this repo. Copy th
 <br>
 
 ## (3) Multi-Task
-See [`examples/multi_task.py`](https://github.com/gitlimlab/CREATE/blob/master/examples/multi_task.py) for a complete example. 
+See [`examples/multi_task.py`](examples/multi_task.py) for a complete example. 
 
 <br>
 
 ## (4) Game Configuration
-See [`create_game/settings.py`](https://github.com/gitlimlab/CREATE/blob/master/create_game/settings.py) for a list of all possible settings that can be changed about the game play, rendering, reward structure and simulation. Configure the environment as: 
+See [`create_game/settings.py`](create_game/settings.py) for a list of all possible settings that can be changed about the game play, rendering, reward structure and simulation. Configure the environment as: 
 
 <br>
 
 ## (5) Defining Tasks
-See [`examples/create_task.ipynb`](https://github.com/gitlimlab/CREATE/blob/master/examples/create_task.ipynb) for an example on how to define custom tasks. 
+See [`examples/create_task.ipynb`](examples/create_task.ipynb) for an example on how to define custom tasks. 
 
 You can also create custom tasks in CREATE with ease. Simply define the task 'ABC' in JSON and you can use it as `CreateLevelABC-v0`. 
 An example JSON definition of `Moving` task is shown below: 
@@ -95,7 +95,7 @@ Complete list of options we can specify for the top level fields:
   'goal,medium_floor:1' :  '[uniform(-0.2, 0.2), uniform(-0.2, 0.2)]'
    ```
    This adds a random variation in [-0.2, 0.2] to each coordinate of `env` object 'medium_floor' with ID 1 and the goal object. This can be useful if a platform-object pair stay together and need to be stochastically initialized.  
-- `env`: all the initial environment objects are defined here. See [complete list of available objects](https://github.com/gitlimlab/CREATE/blob/2b68ffcdcc6d03fa0cfcae97963f2576d233c9ff/create_game/tools/tool_factory.py#L37). You can also specify parameters to these objects such as 'elasticity', 'length' or 'angle'. ID is used by `rnd` to distinguish objects having same name.   
+- `env`: all the initial environment objects are defined here. See [complete list of available objects](create_game/tools/tool_factory.py#L37). You can also specify parameters to these objects such as 'elasticity', 'length' or 'angle' as found in their [individual files](create_game/tools). ID is used by `rnd` to distinguish objects having same name.
 
 
 ```
