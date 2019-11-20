@@ -33,9 +33,10 @@ Try solving tasks for yourself on the [online demo](https://clvrai.com/create/).
 `gym.make('CreateLevelPush-v0')` with the name of the task you want to use. CREATE comes with [12 diverse tasks](#6-included-tasks) and you can easily create more using the simple JSON definition system. 
 Some level of stochasicity is applied in all of the default environments. If you want to use deterministic configurations, specify `Det` after the name of the level like: `gym.make('CreateLevelPushDet-v0')`. 
 
-See [`examples/random_agent.py`](examples/random_agent.py) for an example with using a random agent on the environment. This environment also works well with multi-processing, and the simulation is optimized for high training speeds.
+See [`examples/random_agent.py`](examples/random_agent.py) for an example with using a random agent on the environment. This environment also works well with multi-processing, and the simulation is optimized for high training speeds. If you wish to work with variable action spaces please see [`examples/var_action.py`](examples/var_action.py) for how to get started.
 
 For a performance comparison to the method from our paper, use the evaluation script at [`examples/evaluation.py`](examples/evaluation.py). Change the evaluation script to include your models to assess their performance on the test set of tools.
+
 <br>
 
 ## (2) Installation

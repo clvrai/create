@@ -4,6 +4,8 @@ sys.path.insert(0, '.')
 sys.path.insert(0, '..')
 from create_game import UseSplit
 from create_game import CreateGameSettings
+from create_game import GET_AVAL_ACTIONS
+
 
 import gym
 import numpy as np
@@ -32,25 +34,38 @@ eval_lvls = ['CreateLevelPush-v0',
 # Our paper evaluated over 3200 episodes. 100 episodes across 32 parallel workers
 NUM_EVAL_EPISODES = 100*32
 
+
+def get_action(aval_actions):
+    return
+
 for eval_lvl in eval_lvls:
     env = gym.make(eval_lvl)
     env.set_settings(use_settings)
 
     num_goal_hit = 0.0
 
+    obs = env.reset()
+    # Get the initial set of available actions
+    _, _, _, info = env.step(GET_AVAL_ACTIONS)
+
     for eval_episode_i in range(NUM_EVAL_EPISODES):
-        obs = env.reset()
         ep_reward = 0.0
         done = False
         while not done:
-            # Get the action from your policy
             '''
+                # Access list of all tool objects
                 tool_list = env.tool_gen.tools
-                action = policy.get_action(obs, info['aval'], tool_list)
+                # Get indices of the available actions in episode
+                available_actions = info['aval']
+
+                # Get the action from your policy
+                action = your_policy.get_action(obs, info['aval'], tool_list)
             '''
             action = env.action_space.sample()
+            
             obs, reward, done, info = env.step(action)
             ep_reward += reward
+        obs = env.reset()
 
         num_goal_hit += info['ep_goal_hit']
 
