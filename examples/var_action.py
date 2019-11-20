@@ -15,16 +15,18 @@ env.set_settings(CreateGameSettings(max_num_steps=5))
 num_iters = 10
 
 
-obs = env.reset()
-# Will not actually step in the environment. Just gets the available
-# actions for this episode.
-_, _, _, info = env.step(GET_AVAL_ACTIONS)
-
 for iter_i in range(num_iters):
+    obs = env.reset()
     done = False
     while not done:
-        # Our available actions are always present in info['aval']
-        #aval = info['aval']
+
+        aval = env.get_aval_actions()
+        # This would also work.
+        # _, _, _, info = env.step(GET_AVAL_ACTIONS)
+        # aval = info['aval']
+        # and could be used for multiprocessing environments
+        # where `get_aval_actions` is not accessible.
+
         action = env.action_space.sample()
         obs, reward, done, info = env.step(action)
         try:
