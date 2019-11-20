@@ -29,9 +29,8 @@ use_settings = CreateGameSettings(
 eval_lvls = ['CreateLevelPush-v0',
              'CreateLevelNavigate-v0', 'CreateLevelObstacle-v0']
 
-# Our paper evaluated over 1600*32 episodes. 1600 episodes across 32 parallel
-# workers
-NUM_EVAL_EPISODES = 1600*32
+# Our paper evaluated over 3200 episodes. 100 episodes across 32 parallel workers
+NUM_EVAL_EPISODES = 100*32
 
 for eval_lvl in eval_lvls:
     env = gym.make(eval_lvl)
@@ -45,6 +44,10 @@ for eval_lvl in eval_lvls:
         done = False
         while not done:
             # Get the action from your policy
+            '''
+                tool_list = env.tool_gen.tools
+                action = policy.get_action(obs, info['aval'], tool_list)
+            '''
             action = env.action_space.sample()
             obs, reward, done, info = env.step(action)
             ep_reward += reward
