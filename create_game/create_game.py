@@ -271,7 +271,7 @@ class CreateGame(BaseEnv):
 
         if not self.has_reset:
             raise ValueError('Must call reset() on the environment before stepping')
-        if self.episode_len > self.max_num_steps:
+        if self.episode_len > self.max_num_steps and not self.server_mode:
             raise ValueError('Must call reset() after environment returns done=True')
 
         action_index = int(np.round(action[0]))
