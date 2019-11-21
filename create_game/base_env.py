@@ -207,7 +207,7 @@ class BaseEnv(gym.Env):
             if self.settings.render_mega_res and \
                     self.settings.evaluation_mode and \
                     large_step_i % self.settings.mega_res_interval == 0:
-                int_frame = self.render('rbg_array_high_mega_res')
+                int_frame = self.render('rgb_array_high_mega_res')
                 int_frames.append(int_frame)
 
         frame = self.render(render_black_box=render_black_box)
