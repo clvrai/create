@@ -244,7 +244,7 @@ class CreateGame(BaseEnv):
 
         if self.check_out_of_range(action_pos):
             placed_obj = False
-        elif self.check_overlap(action_pos):
+        elif self.settings.use_overlap and self.check_overlap(action_pos):
             placed_obj = False
         else:
             tool = self.tool_gen.get_tool(use_tool_type, action_pos, self.settings)
