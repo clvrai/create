@@ -13,8 +13,8 @@ class SampleDict(Dict):
         rnd_sel = self.spaces['index'].sample()
         return [rnd_sel, *rnd_pos]
 
+GET_ACTIONS = -1
 
-GET_AVAL_ACTIONS = [-1,-1,-1]
 class CreateGame(BaseEnv):
     def __init__(self):
         self.place_walls = False
@@ -262,12 +262,17 @@ class CreateGame(BaseEnv):
         return placed_obj
 
     def get_aval_actions(self):
-        return self.inventory
+        return self.inventory, self.tool_gen.tools
 
     def step(self, action):
         """
         - action: tuple of format (integer between 0 and n_actions - 1, [x_pos, y_pos])
         """
+        if np.array(action).ndim == 0 and int(action) == GET_ACTIONS:
+            return np.zeros(self.observation_space.shape), 0.0, False, {
+                'aval': self.inventory,
+                'tool_list': self.tool_gen.tools
+                }
 
         if not self.has_reset:
             raise ValueError('Must call reset() on the environment before stepping')
@@ -275,11 +280,6 @@ class CreateGame(BaseEnv):
             raise ValueError('Must call reset() after environment returns done=True')
 
         action_index = int(np.round(action[0]))
-        if action_index == -1:
-            return np.zeros(self.observation_space.shape), 0.0, False, {
-                    'aval': self.inventory
-                    }
-
         done = False
         reward = self.settings.default_reward
         info = {}
@@ -389,6 +389,7 @@ class CreateGame(BaseEnv):
             info['ep_placed_tools'] = len(self.placed_tools)
 
         info['aval'] = self.inventory
+        info['tool_list'] = self.tool_gen.tools
 
         return obs, reward, done, info
 

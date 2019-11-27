@@ -4,7 +4,7 @@ sys.path.insert(0, '.')
 sys.path.insert(0, '..')
 from create_game import UseSplit
 from create_game import CreateGameSettings
-from create_game import GET_AVAL_ACTIONS
+from create_game import GET_ACTIONS
 
 
 import gym
@@ -47,17 +47,13 @@ for eval_lvl in eval_lvls:
         ep_reward = 0.0
         done = False
         while not done:
-            aval = env.get_aval_actions()
-            # This would also work.
-            # _, _, _, info = env.step(GET_AVAL_ACTIONS)
-            # aval = info['aval']
-            # and could be used for multiprocessing environments
-            # where `get_aval_actions` is not accessible.
+            aval, tool_list = env.get_aval_actions()
+            # The following way can be used with multiprocessing environments
+            # where `get_aval_actions` is not accessible:
+            # _, _, _, info = env.step(GET_ACTIONS)
+            # aval, tool_list = info['aval'], info['tool_list']
 
             '''
-                # Access list of all tool objects
-                tool_list = env.tool_gen.tools
-
                 # Get the action from your policy
                 action = your_policy.get_action(obs, aval, tool_list)
             '''
