@@ -14,6 +14,7 @@ class SampleDict(Dict):
         return [rnd_sel, *rnd_pos]
 
 GET_ACTIONS = -1
+GET_TOOL_LIST = -2
 
 class CreateGame(BaseEnv):
     def __init__(self):
@@ -262,7 +263,10 @@ class CreateGame(BaseEnv):
         return placed_obj
 
     def get_aval_actions(self):
-        return self.inventory, self.tool_gen.tools
+        return self.inventory
+
+    def get_tool_list(self):
+        return self.tool_gen.tools
 
     def step(self, action):
         """
@@ -270,7 +274,10 @@ class CreateGame(BaseEnv):
         """
         if np.array(action).ndim == 0 and int(action) == GET_ACTIONS:
             return np.zeros(self.observation_space.shape), 0.0, False, {
-                'aval': self.inventory,
+                'aval': self.inventory
+                }
+        elif np.array(action).ndim == 0 and int(action) == GET_TOOL_LIST:
+            return np.zeros(self.observation_space.shape), 0.0, False, {
                 'tool_list': self.tool_gen.tools
                 }
 
@@ -389,7 +396,6 @@ class CreateGame(BaseEnv):
             info['ep_placed_tools'] = len(self.placed_tools)
 
         info['aval'] = self.inventory
-        info['tool_list'] = self.tool_gen.tools
 
         return obs, reward, done, info
 
