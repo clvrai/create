@@ -10,12 +10,12 @@
 
 **CREATE** is a multi-step physics-based puzzle reinforcement learning benchmark featuring many diverse tools and tasks. The objective is to sequentially select and position tools from an available set, to make the red ball (target) reach the goal (green) in various environment configurations.
 
-Try solving tasks for yourself on the [online demo](https://clvrai.com/create/). Or get started with some [examples](examples).
+Try solving tasks for yourself on the [online demo](https://clvrai.com/create/#demo). Or get started with some [examples](examples).
 
 ### Features
 - **Multi-step environment**: Agent places a tool after every few iterations of simulation acting on *image* observations. 
 - **Easily usable**: Environment is a standard [OpenAI Gym](https://github.com/openai/gym) environment interface. 
-- **Diverse Tasks**: 12 complex tasks with stochastic variations and an easy <a href="https://github.com/clvrai/CREATE#   defining-tasks">interface</a> to create many more tasks. Suitable for meta reinforcement learning. 
+- **Diverse Tasks**: 12 complex tasks with stochastic variations and an easy [interface](#5-defining-tasks) to create many more tasks. Suitable for meta reinforcement learning. 
 - **Variety of Tools**: 12 base tool types, with many more variations of sizes, angles, friction parameters. 
 - **Simple and Fast**: Runs headless and supports flexible resolutions for rendering. 
 - **Configurable**: Easily create new levels with a simple JSON interface and create new tools. 
