@@ -13,8 +13,9 @@ class SampleDict(Dict):
         rnd_sel = self.spaces['index'].sample()
         return [rnd_sel, *rnd_pos]
 
+GET_ACTIONS = -1
+GET_TOOL_LIST = -2
 
-GET_AVAL_ACTIONS = [-1,-1,-1]
 class CreateGame(BaseEnv):
     def __init__(self):
         self.place_walls = False
@@ -244,7 +245,7 @@ class CreateGame(BaseEnv):
 
         if self.check_out_of_range(action_pos):
             placed_obj = False
-        elif self.check_overlap(action_pos):
+        elif self.settings.use_overlap and self.check_overlap(action_pos):
             placed_obj = False
         else:
             tool = self.tool_gen.get_tool(use_tool_type, action_pos, self.settings)
@@ -264,22 +265,28 @@ class CreateGame(BaseEnv):
     def get_aval_actions(self):
         return self.inventory
 
+    def get_tool_list(self):
+        return self.tool_gen.tools
+
     def step(self, action):
         """
         - action: tuple of format (integer between 0 and n_actions - 1, [x_pos, y_pos])
         """
+        if np.array(action).ndim == 0 and int(action) == GET_ACTIONS:
+            return np.zeros(self.observation_space.shape), 0.0, False, {
+                'aval': self.inventory
+                }
+        elif np.array(action).ndim == 0 and int(action) == GET_TOOL_LIST:
+            return np.zeros(self.observation_space.shape), 0.0, False, {
+                'tool_list': self.tool_gen.tools
+                }
 
         if not self.has_reset:
             raise ValueError('Must call reset() on the environment before stepping')
-        if self.episode_len > self.max_num_steps:
+        if self.episode_len > self.max_num_steps and not self.server_mode:
             raise ValueError('Must call reset() after environment returns done=True')
 
         action_index = int(np.round(action[0]))
-        if action_index == -1:
-            return np.zeros(self.observation_space.shape), 0.0, False, {
-                    'aval': self.inventory
-                    }
-
         done = False
         reward = self.settings.default_reward
         info = {}

@@ -4,7 +4,7 @@ sys.path.insert(0, '.')
 sys.path.insert(0, '..')
 from create_game import UseSplit
 from create_game import CreateGameSettings
-from create_game import GET_AVAL_ACTIONS
+from create_game import GET_ACTIONS, GET_TOOL_LIST
 
 
 import gym
@@ -31,32 +31,36 @@ use_settings = CreateGameSettings(
 eval_lvls = ['CreateLevelPush-v0',
              'CreateLevelNavigate-v0', 'CreateLevelObstacle-v0']
 
-# Our paper evaluated over 1600*32 episodes. 1600 episodes across 32 parallel
-# workers
-NUM_EVAL_EPISODES = 1600 * 32
-
+# Our paper evaluated over 3200 episodes. 100 episodes across 32 parallel workers
+NUM_EVAL_EPISODES = 100*32
 
 for eval_lvl in eval_lvls:
     env = gym.make(eval_lvl)
     env.set_settings(use_settings)
 
+    tool_list = env.get_tool_list() # Alternatively, use env.step(GET_TOOL_LIST)
+
     num_goal_hit = 0.0
+
+    obs = env.reset()
 
     for eval_episode_i in range(NUM_EVAL_EPISODES):
         obs = env.reset()
         ep_reward = 0.0
         done = False
         while not done:
-            # Get the action from your policy. You can also incorporate the
-            # indices of the available actions for deciding the action in your
-            # policy.
             aval = env.get_aval_actions()
-            # This would also work.
-            # _, _, _, info = env.step(GET_AVAL_ACTIONS)
+            # The following way can be used with multiprocessing environments
+            # where `get_aval_actions` is not accessible:
+            # _, _, _, info = env.step(GET_ACTIONS)
             # aval = info['aval']
-            # and could be used for multiprocessing environments
-            # where `get_aval_actions` is not accessible.
+
+            '''
+                # Get the action from your policy
+                action = your_policy.get_action(obs, aval, tool_list)
+            '''
             action = env.action_space.sample()
+            
             obs, reward, done, info = env.step(action)
             ep_reward += reward
         obs = env.reset()
