@@ -1,6 +1,6 @@
 # Chain REAction Tool Environment (CREATE)
 [Ayush Jain](http://www-scf.usc.edu/~ayushj/)\*, [Andrew Szot](https://www.andrewszot.com)\*, [Joseph J. Lim](https://clvrai.com) at [USC CLVR lab](https://clvrai.com)  
-[[Environment website](https://www.clvrai.com/create)]   [[Paper](https://www.clvrai.com)]
+[[Environment website](https://www.clvrai.com/create)], [Citation TBA]
 
 <p align="center">
      <kbd>
@@ -30,8 +30,24 @@ Try solving tasks for yourself on the [online demo](https://clvrai.com/create/).
 
 ## (1) Usage
 `import create_game` to register the environments. From here, create the gym environment using the standard command: 
-`gym.make('CreateLevelPush-v0')` with the name of the task you want to use. CREATE comes with [12 diverse tasks](#6-included-tasks) and you can easily create more using the simple JSON definition system. 
-Some level of stochasicity is applied in all of the default environments. If you want to use deterministic configurations, specify `Det` after the name of the level like: `gym.make('CreateLevelPushDet-v0')`. 
+`gym.make('CreateLevelPush-v0')` with the name of the task you want to use.
+CREATE comes with [12 diverse tasks](#6-included-tasks) and you can easily
+create more using the simple JSON definition system. Below is an example of how
+it is easy to get started with the environment. 
+```
+import create_game
+
+env = gym.make('CreateLevelPush-v0')
+
+env.reset()
+
+done = False
+while not done: 
+    obs, reward, done, info = env.step(env.action_space.sample())
+    env.render('human')
+```
+
+By default stochasicity is applied in the default environments. If you want to use deterministic configurations, specify `Det` after the name of the level like: `gym.make('CreateLevelPushDet-v0')`. 
 
 See [`examples/random_agent.py`](examples/random_agent.py) for an example with using a random agent on the environment. This environment also works well with multi-processing, and the simulation is optimized for high training speeds. If you wish to work with variable action spaces please see [`examples/var_action.py`](examples/var_action.py) for how to get started.
 
@@ -40,7 +56,14 @@ For a performance comparison to the method from our paper, use the evaluation sc
 <br>
 
 ## (2) Installation
-Clone this repository. `pip install -r requirements.txt` from this repo. Copy the `create_game` folder to where you want to use it. Note this project only works with Python 3.6+. 
+This project only works with Python 3.6+. Clone this repository, pip install the
+requirements and then move the `create_game` folder to where you want to use
+it. All of the code for the environment is in this folder.
+```
+git clone https://github.com/gitlimlab/CREATE.git
+cd CREATE
+pip install -r requirements.txt
+```
 
 <br>
 
