@@ -1,6 +1,6 @@
 # Chain REAction Tool Environment (CREATE)
 [Ayush Jain](http://www-scf.usc.edu/~ayushj/)\*, [Andrew Szot](https://www.andrewszot.com)\*, [Joseph J. Lim](https://clvrai.com) at [USC CLVR lab](https://clvrai.com)  
-[[Environment website](https://www.clvrai.com/create)], [Citation TBA]
+[[Environment website](https://www.clvrai.com/create)] 
 
 <p align="center">
      <kbd>
@@ -154,6 +154,5 @@ Our environment is based on Pygame and Pymunk libraries:
 
 ## (8) Citation
 ```
-@inproceedings{
-}
+TBA
 ```
