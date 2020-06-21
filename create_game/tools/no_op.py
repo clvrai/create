@@ -15,5 +15,5 @@ class NoOp(object):
     def render(self, space, scale=1, anti_alias=False):
         pass
 
-    def render_black_box(self, space):
-        pass
+    def set_settings(self, settings):
+        self.settings = settings

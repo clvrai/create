@@ -48,34 +48,26 @@ class CreateGameMarker(CreateLevelFile):
 
     def step(self, action):
         obs, reward, done, info = super().step(action)
-
-        # only terminate if the marker ball is out of bounds AND it has not hit
-        # the target ball yet
-        target_vel = np.sqrt(sum(self.target_obj.shape.body.velocity ** 2))
-        marker_gone = not self.within_bounds(self.marker_obj.body.position)
-        if marker_gone and target_vel < self.settings.min_velocity:
-            done = True
+        general_reward = reward
 
         # Dense reward based off of distance from target ball to the goal
         cur_target_pos = self.target_obj.body.position
         move_dist = self.calc_distance(self.target_obj_start_pos, cur_target_pos)
-
-        goal_on_left = self.target_obj_start_pos[0] < self.goal_pos[0]
-        moved_target_left = self.target_obj_start_pos[0] < cur_target_pos[0]
 
         if self.target_hit == 0 and move_dist > self.settings.move_thresh and \
                 (not self.marker_must_hit or hasattr(self.marker_obj.shape, 'hit_target')):
             if self.settings.marker_reward == 'reg':
                 self.target_hit += 1.
                 reward += self.target_reward
-                self.prev_dist = self.calc_distance(cur_target_pos, self.goal_pos)
             elif self.settings.marker_reward == 'dir':
+                goal_on_left = self.target_obj_start_pos[0] < self.goal_pos[0]
+                moved_target_left = self.target_obj_start_pos[0] < cur_target_pos[0]
                 if goal_on_left == moved_target_left:
                     self.target_hit += 1.0
                     reward += self.target_reward
-                    self.prev_dist = self.calc_distance(cur_target_pos, self.goal_pos)
             else:
                 raise ValueError('Unknown marker reward type')
+            self.prev_dist = self.calc_distance(cur_target_pos, self.goal_pos)
         else:
             distance = self.calc_distance(cur_target_pos,
                     self.marker_obj.body.position)
@@ -83,13 +75,23 @@ class CreateGameMarker(CreateLevelFile):
             self.episode_dense_reward += self.dense_reward_scale * (self.prev_dist - distance)
             self.prev_dist = distance
 
+
+        # Terminate if the marker ball is out of bounds AND target is not hit yet
+        if (not self.within_bounds(self.marker_obj.body.position)) and self.target_hit == 0:
+            done = True
+            reward += self.settings.marker_gone_reward
+
+        self.episode_reward += (reward - general_reward)
+
         if done:
             info['ep_len'] = self.episode_len
             info['ep_target_hit'] = self.target_hit
             info['ep_goal_hit'] = self.goal_hit
             info['ep_reward'] = self.episode_reward
+            info['ep_subgoal_reward'] = self.total_subgoal_add_reward
             info['ep_no_op'] = self.no_op_count
             info['ep_invalid_action'] = self.invalid_action_count
+            info['ep_blocked_action'] = self.blocked_action_count
             info['ep_overlap_action'] = self.overlap_action_count
             info['ep_dense_reward'] = self.episode_dense_reward
             info['ep_placed_tools'] = len(self.placed_tools)

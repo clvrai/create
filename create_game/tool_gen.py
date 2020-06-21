@@ -62,6 +62,7 @@ class ToolType(object):
                  def_extra['force'],
                  def_extra['vel']]
 
+
     def __str__(self):
         out_str = self.tool_type
         if self.angle is not None:
@@ -917,12 +918,11 @@ class ToolGenerator:
         if split_type is None:
             self_len = len(self.tools)
 
-            seg_len = self_len // args.num_segs
             rnd_order = np.arange(self_len)
 
             random.shuffle(rnd_order)
 
-            mid_ind = int(self_len * 0.8)
+            mid_ind = int(self_len * 0.5)
 
             train_tools = rnd_order[:mid_ind]
             test_tools = rnd_order[mid_ind:]
@@ -1427,7 +1427,8 @@ class ToolGenerator:
 
             train_tools = extract_30(all_tools)
 
-            # Needs implementation
+            # Test tools should not be directly used in this setup. Instead
+            # custom experimentation should be performed.
             test_tools = train_tools
 
         elif split_type == 'random_params':
@@ -1544,6 +1545,7 @@ class ToolGenerator:
 
             random.shuffle(unq_tool_vals)
             mid_ind = (len(unq_tool_vals) + 1) // 2
+            # Randomly split each group.
             train_vals = unq_tool_vals[:mid_ind]
             test_vals = unq_tool_vals[mid_ind:]
             for i, tool_val in enumerate(tool_vals):

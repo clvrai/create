@@ -7,7 +7,7 @@ class CreateGameSettings(object):
             dense_reward_scale=0.0, invalid_action_reward=-0.01,
             blocked_action_reward=-0.01, sec_goal_reward=2.0,
             sec_goal_radius=3.0, permanent_goal=True, marker_reward='reg',
-            target_reward=1.0, screen_width=84, screen_height=84,
+            target_reward=1.0, marker_gone_reward=0., screen_width=84, screen_height=84,
             render_width=84, render_height=84, high_res_width=1024,
             high_res_height=1024, render_ball_traces=False,
             evaluation_mode=False, render_mega_res=False, mega_res_interval=4,
@@ -16,11 +16,12 @@ class CreateGameSettings(object):
             move_thresh=0.03, use_overlap=True, action_random_sample=True,
             action_sample_fn=gen_action_set,
             get_allowed_actions_fn=get_allowed_actions, action_set_size=40,
-            action_extra={}, randomized_fixed_set=False,
+            action_extra={},
             split_name='full_clean', split_type=UseSplit.TRAIN,
             action_seg_loc=osp.join(osp.dirname(osp.abspath(__file__)), 'splits'),
             validation_ratio=0.5, gran_factor=1.0,
-            override_level_settings=False, with_subgoals=True):
+            override_level_settings=False, with_subgoals=True,
+            separate_skip=False):
 
         ######################
         # Reward modifiers
@@ -33,11 +34,12 @@ class CreateGameSettings(object):
         self.blocked_action_reward = blocked_action_reward
         self.sec_goal_reward = sec_goal_reward
         self.sec_goal_radius = sec_goal_radius
-        self.permanent_goal = True
+        self.permanent_goal = permanent_goal
         # For marker ball levels
         self.marker_reward = marker_reward
         self.target_reward = target_reward
         self.with_subgoals = with_subgoals
+        self.marker_gone_reward = marker_gone_reward
 
         ######################
         # Render settings
@@ -75,11 +77,11 @@ class CreateGameSettings(object):
         self.get_allowed_actions_fn = get_allowed_actions_fn
         self.action_set_size = action_set_size
         self.action_extra = action_extra
-        self.randomized_fixed_set = randomized_fixed_set
         self.split_name = split_name
         self.split_type = split_type
         self.action_seg_loc = action_seg_loc
         self.validation_ratio = validation_ratio
+        self.separate_skip = separate_skip
 
         ######################
         # Tool generation settings

@@ -13,7 +13,6 @@ class SampleDict(Dict):
         rnd_sel = self.spaces['index'].sample()
         return [rnd_sel, *rnd_pos]
 
-GET_ACTIONS = -1
 GET_TOOL_LIST = -2
 
 class CreateGame(BaseEnv):
@@ -39,18 +38,29 @@ class CreateGame(BaseEnv):
         self.dense_reward_scale = None
         self.no_action_space_resample = False
 
-        # place holder action space.
-        self.action_space = SampleDict({
-            'index': Discrete(1),
-            'pos': Box(low=-1.0, high=1.0, shape=(2,), dtype=np.float32)
-        })
-
         self.inventory = None
-        # just use the defaults
-        self.set_settings(CreateGameSettings())
         self.server_mode = False
         self.has_reset = False
         self.episode_len  = 0
+
+        # Initialize to the defaults
+        self.set_settings(CreateGameSettings())
+
+        # place holder action space.
+        self._create_action_space(1)
+
+    def _create_action_space(self, n_opts):
+        if self.settings.separate_skip:
+            self.action_space = SampleDict({
+                'index': Discrete(n_opts),
+                'skip': Discrete(2),
+                'pos': Box(low=-1.0, high=1.0, shape=(2,), dtype=np.float32)
+            })
+        else:
+            self.action_space = SampleDict({
+                'index': Discrete(n_opts),
+                'pos': Box(low=-1.0, high=1.0, shape=(2,), dtype=np.float32)
+            })
 
     def set_settings(self, settings):
         super().set_settings(settings)
@@ -58,8 +68,7 @@ class CreateGame(BaseEnv):
         self.dense_reward_scale = settings.dense_reward_scale
 
         self.tool_gen = ToolGenerator(settings.gran_factor)
-
-        self.allowed_actions = settings.get_allowed_actions_fn(settings, self.tool_gen)
+        self.allowed_actions = settings.get_allowed_actions_fn(settings)
         self._generate_inventory()
 
     def get_parts(self, tool_factory):
@@ -85,12 +94,7 @@ class CreateGame(BaseEnv):
 
     def update_available_tools(self, tools):
         self.inventory = tools
-        self.action_space = SampleDict({
-            # select any one of our tools
-            'index': Discrete(len(tools)),
-            # x, y between -1.0 and 1.0
-            'pos': Box(low=-1.0, high=1.0, shape=(2,), dtype=np.float32)
-        })
+        self._create_action_space(len(tools))
 
 
     def _generate_inventory(self):
@@ -102,16 +106,29 @@ class CreateGame(BaseEnv):
                     self.tool_gen, self.allowed_actions,
                     np.random.RandomState())
             self.update_available_tools(tools)
-        elif self.inventory is None:
-            if self.settings.randomized_fixed_set:
-                rnd_state = np.random.RandomState()
-            else:
-                rnd_state = np.random.RandomState(123)
-
-            # Tool set has not been generated yet, generate now.
-            tools = settings.action_sample_fn(self.settings, self.tool_gen,
-                    self.allowed_actions, rnd_state)
+        else:
+            tools = self.get_fixed_sampling()
             self.update_available_tools(tools)
+
+    def get_fixed_sampling(self, override_allowed=None):
+        # Used a fixed random number so we always have the same fixed action
+        # space. This is necessary so we can get the same fixed action space
+        # during test time.
+        rnd_state = np.random.RandomState(123)
+
+        use_allowed = self.allowed_actions
+        if override_allowed is not None:
+            use_allowed = override_allowed
+
+        use_allowed = np.array(use_allowed)
+        rnd_state.shuffle(use_allowed)
+
+        return use_allowed
+
+        # Tool set has not been generated yet, generate now.
+        #tools = self.settings.action_sample_fn(self.settings, self.tool_gen,
+        #        use_allowed, rnd_state, fixed_sample=True)
+        #return tools
 
 
     def reset(self):
@@ -262,63 +279,90 @@ class CreateGame(BaseEnv):
 
         return placed_obj
 
-    def get_aval_actions(self):
-        return self.inventory
-
     def get_tool_list(self):
         return self.tool_gen.tools
+
+    def get_aval(self):
+        return self.inventory
 
     def step(self, action):
         """
         - action: tuple of format (integer between 0 and n_actions - 1, [x_pos, y_pos])
         """
-        if np.array(action).ndim == 0 and int(action) == GET_ACTIONS:
-            return np.zeros(self.observation_space.shape), 0.0, False, {
-                'aval': self.inventory
-                }
-        elif np.array(action).ndim == 0 and int(action) == GET_TOOL_LIST:
-            return np.zeros(self.observation_space.shape), 0.0, False, {
-                'tool_list': self.tool_gen.tools
-                }
-
         if not self.has_reset:
             raise ValueError('Must call reset() on the environment before stepping')
         if self.episode_len > self.max_num_steps and not self.server_mode:
             raise ValueError('Must call reset() after environment returns done=True')
 
         action_index = int(np.round(action[0]))
-        done = False
         reward = self.settings.default_reward
         info = {}
         # Observation is going to be a sequence of frames
         obs = []
 
         use_tool_type = self.inventory[action_index]
-        action_pos = action[1:]
+        action_pos = action[-2:]
 
-        action_pos = np.clip(action_pos, -1.0, 1.0)
+        if not (self.settings.separate_skip and int(np.round(action[1])) == 1):
+            action_pos = np.clip(action_pos, -1.0, 1.0)
 
-        if self.check_out_of_range(action_pos):
-            reward += self.settings.invalid_action_reward
-            self.invalid_action_count += 1
-        elif (self.tool_gen.tools[use_tool_type].tool_type == 'no_op'):
-            reward += self.settings.no_op_reward
-            self.no_op_count += 1
-        elif self.check_overlap(action_pos) and self.settings.use_overlap:
-            reward += self.settings.blocked_action_reward
-            self.overlap_action_count += 1
-        else:
-            tool = self.tool_gen.get_tool(use_tool_type, action_pos,
-                    self.settings)
-            all_objs = self.get_all_objs()
-            tool.add_to_space(self.space)
-            if self.check_collisions(tool, action_pos, all_objs):
+            if self.check_out_of_range(action_pos):
+                reward += self.settings.invalid_action_reward
+                self.invalid_action_count += 1
+            elif (not self.settings.separate_skip) and (self.tool_gen.tools[use_tool_type].tool_type == 'no_op'):
+                reward += self.settings.no_op_reward
+                self.no_op_count += 1
+            elif self.settings.use_overlap and self.check_overlap(action_pos):
                 reward += self.settings.blocked_action_reward
                 self.overlap_action_count += 1
-                tool.remove_from_space(self.space)
             else:
-                self.placed_tools.append(tool)
+                tool = self.tool_gen.get_tool(use_tool_type, action_pos,
+                        self.settings)
+                all_objs = self.get_all_objs()
+                tool.add_to_space(self.space)
+                if self.check_collisions(tool, action_pos, all_objs):
+                    reward += self.settings.blocked_action_reward
+                    self.overlap_action_count += 1
+                    tool.remove_from_space(self.space)
+                else:
+                    self.placed_tools.append(tool)
+        else:
+            # We skipped the current action.
+            self.no_op_count += 1
 
+        obs, step_reward, done = self._create_step_forward()
+
+        reward += step_reward
+
+        # Add all possible log data to the info array
+        info['frames'] = obs
+        info['cur_goal_hit'] = self.goal_hit
+
+        self.episode_reward += reward
+
+        if done:
+            # Only display episode long info once the episode ends.
+            info['ep_len'] = self.episode_len
+            info['ep_target_hit'] = self.target_hit
+            info['ep_goal_hit'] = self.goal_hit
+            info['ep_reward'] = self.episode_reward
+            info['ep_subgoal_reward'] = self.total_subgoal_add_reward
+
+            info['ep_no_op'] = self.no_op_count
+            info['ep_invalid_action'] = self.invalid_action_count
+            info['ep_blocked_action'] = self.blocked_action_count
+            info['ep_overlap_action'] = self.overlap_action_count
+            info['ep_dense_reward'] = self.episode_dense_reward
+            info['ep_placed_tools'] = len(self.placed_tools)
+
+        #info['aval'] = self.inventory
+
+        return obs, reward, done, info
+
+
+    def _create_step_forward(self):
+        done = False
+        reward = 0.0
         obs = super().step_forward()
 
         self.episode_len += 1
@@ -373,31 +417,10 @@ class CreateGame(BaseEnv):
         self.total_subgoal_add_reward += subgoal_add_reward
         reward += subgoal_add_reward
 
-        self.episode_reward += reward
         obs = np.array(obs)
+        return obs, reward, done
 
-        # Add all possible log data to the info array
-        info['frames'] = obs
-        info['cur_goal_hit'] = self.goal_hit
 
-        if done:
-            # Only display episode long info once the episode ends.
-            info['ep_len'] = self.episode_len
-            info['ep_target_hit'] = self.target_hit
-            info['ep_goal_hit'] = self.goal_hit
-            info['ep_reward'] = self.episode_reward
-            info['ep_subgoal_reward'] = self.total_subgoal_add_reward
-
-            info['ep_no_op'] = self.no_op_count
-            info['ep_invalid_action'] = self.invalid_action_count
-            info['ep_blocked_action'] = self.blocked_action_count
-            info['ep_overlap_action'] = self.overlap_action_count
-            info['ep_dense_reward'] = self.episode_dense_reward
-            info['ep_placed_tools'] = len(self.placed_tools)
-
-        info['aval'] = self.inventory
-
-        return obs, reward, done, info
 
     def compute_added_reward(self):
         """
@@ -409,8 +432,8 @@ class CreateGame(BaseEnv):
             if i not in self.done_target_sec_goals:
                 if len(self.target_obj.shape.shapes_collide(self.target_sec_goals[i].shape).points) > 0:
                     self.done_target_sec_goals.append(i)
-                    reward += self.sec_goal_reward - \
-                        0.1 * len(self.placed_tools)
+                    reward += max(0, self.sec_goal_reward - \
+                        0.1 * len(self.placed_tools))
                     self.target_sec_goals[i].remove_from_space(self.space)
                     self.env_tools.remove(self.target_sec_goals[i])
 
@@ -418,8 +441,8 @@ class CreateGame(BaseEnv):
             if i not in self.done_marker_sec_goals:
                 if len(self.marker_obj.shape.shapes_collide(self.marker_sec_goals[i].shape).points) > 0:
                     self.done_marker_sec_goals.append(i)
-                    reward += self.sec_goal_reward - \
-                        0.1 * len(self.placed_tools)
+                    reward += max(0, self.sec_goal_reward - \
+                        0.1 * len(self.placed_tools))
                     self.marker_sec_goals[i].remove_from_space(self.space)
                     self.env_tools.remove(self.marker_sec_goals[i])
         return reward

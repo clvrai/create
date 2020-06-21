@@ -128,8 +128,7 @@ class CreateLevelFile(CreateGame):
         else:
             jf = json.loads(json_str)
 
-        if 'overlap_thresh' in jf:
-            self.OVERLAP_THRESHOLD = jf['overlap_thresh']
+
         self.jf = jf
 
         target = jf['target']
@@ -168,8 +167,13 @@ class CreateLevelFile(CreateGame):
         """
         Called every reset by the environment.
         """
-        if 'max_num_steps' in self.jf and not self.settings.override_level_settings:
-            self.max_num_steps = self.jf['max_num_steps']
+        if not self.settings.override_level_settings:
+            if 'max_num_steps' in self.jf:
+                self.max_num_steps = self.jf['max_num_steps']
+            if 'overlap_thresh' in self.jf:
+                self.settings.overlap_threshold = self.jf['overlap_thresh']
+
+
         if 'marker_must_hit' in self.jf:
             self.marker_must_hit = self.jf['marker_must_hit']
         if 'sec_goal_reward' in self.jf:

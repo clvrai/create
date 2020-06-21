@@ -8,12 +8,13 @@ import numpy as np
 import os
 import pymunk.pygame_util
 import pymunk
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+os.environ["SDL_VIDEODRIVER"] = "dummy"
 from pygame.color import *
 from pygame.locals import *
 import pygame
-
 pygame.mixer.quit()  # Stop all sounds
-os.environ["SDL_VIDEODRIVER"] = "dummy"
+
 
 
 class BaseEnv(gym.Env):
@@ -151,12 +152,12 @@ class BaseEnv(gym.Env):
         the path of the ball in a single image.
         """
         if large_step_i % 40 == 0:
-            if len(self.marker_positions) == 0 or \
-                    np.sqrt(np.sum((self.marker_positions[-1] - self.marker_obj.body.position)**2)) > 5.0:
+            if hasattr(self, 'marker_obj') and (len(self.marker_positions) == 0 or \
+                    np.sqrt(np.sum((self.marker_positions[-1] - self.marker_obj.body.position)**2)) > 5.0):
 
                 new_marker_trace = copy.deepcopy(self.marker_obj)
                 new_marker_trace.is_trace = True
-                new_marker_trace.color = 'green'
+                new_marker_trace.color = 'royalblue'
                 self.marker_positions.append(self.marker_obj.body.position)
                 self.marker_ball_traces.append(new_marker_trace)
 
@@ -170,14 +171,15 @@ class BaseEnv(gym.Env):
                 self.target_ball_traces.append(new_target_trace)
 
         if large_step_i % 8 == 0:
-            new_marker_trace = copy.deepcopy(self.marker_obj)
-            new_marker_trace.is_trace = True
-            new_marker_trace.color = 'mediumseagreen'
-            new_marker_trace.segment = True
-            self.marker_lines.append(self.marker_obj.body.position)
-            if len(self.marker_lines) > 1:
-                new_marker_trace.prev_pos = self.marker_lines[-2]
-                self.marker_line_traces.append(new_marker_trace)
+            if hasattr(self, 'marker_obj'):
+                new_marker_trace = copy.deepcopy(self.marker_obj)
+                new_marker_trace.is_trace = True
+                new_marker_trace.color = 'blue'
+                new_marker_trace.segment = True
+                self.marker_lines.append(self.marker_obj.body.position)
+                if len(self.marker_lines) > 1:
+                    new_marker_trace.prev_pos = self.marker_lines[-2]
+                    self.marker_line_traces.append(new_marker_trace)
 
             new_target_trace = copy.deepcopy(self.target_obj)
             new_target_trace.is_trace = True
@@ -188,7 +190,7 @@ class BaseEnv(gym.Env):
                 new_target_trace.prev_pos = self.target_lines[-2]
                 self.target_line_traces.append(new_target_trace)
 
-    def step_forward(self, render_black_box=False):
+    def step_forward(self):
         """
         Step forward in the current configuration of the scene.
         Return a sequence of images as output
@@ -210,69 +212,51 @@ class BaseEnv(gym.Env):
                 int_frame = self.render('rgb_array_high_mega_res')
                 int_frames.append(int_frame)
 
-        frame = self.render(render_black_box=render_black_box)
+        frame = self.render()
         if len(int_frames) > 0:
             self.int_frames = int_frames
         return frame
 
-    def step_forward_img(self, test_obj, tool_pos, tool, collision_radius=0.1, render_black_box=False, mode='rgb_array', add_text=None):
+
+    def step_forward_play(self, test_obj, tool_pos, tool, data_type='video', collision_radius=0.1, mode='rgb_array_high', add_text=None):
         """
         Place just two objects in the scene. The test_obj is used to probe the
         properties of the tool at tool_pos. This is supposed to be used to
         investigate the properties of the tools.
         """
         self._check_setup()
-        frames = []
+        states = []
         dt = 1.0/self.fps
         touched = False
         first_touched = -1
         for large_step_i in range(self.large_steps):
-            if self.settings.render_ball_traces:
+            if self.settings.render_ball_traces and data_type=='video':
                 self.prepare_traces(large_step_i)
 
-            if tool.shape is not None and len(test_obj.shape.shapes_collide(tool.shape).points) > 0:
-                touched = True
-            elif tool.shape is None:
-                # This is for No Op Only
-                touched = self.calc_distance(
-                    test_obj.body.position, denormalize(tool_pos)) < collision_radius
             self.space.step(dt)
 
+            if tool.shape is not None and \
+                len(test_obj.shape.shapes_collide(tool.shape).points) > 0:
+                touched = True
+            elif tool.shape is None: # This is for No Op Only
+                touched = self.calc_distance(
+                    test_obj.body.position, self.denormalize(tool_pos)) < collision_radius
+
+            # Accumulate frames / states to trajectory
             if ((large_step_i+1) % self.render_interval == 0) or \
                     (large_step_i == (self.large_steps - 1) and states == []):
                 if first_touched == -1 and touched:
-                    first_touched = len(frames)
-                frame = self.render(mode=mode,
-                                    render_black_box=render_black_box, add_text=add_text)
-                frames.append(frame)
+                    first_touched = len(states)
 
-        return frames, touched, first_touched
-
-    def step_forward_state(self, test_obj, tool_pos, tool, collision_radius=0.1):
-        """
-        Same as `step_forward_img` but returns  a state instead of an image
-        observation.
-        """
-        self._check_setup()
-        states = []
-        touched = False
-        for large_step_i in range(self.large_steps):
-            dt = 1.0/self.fps
-            self.space.step(dt)
-            if tool.shape is not None and len(test_obj.shape.shapes_collide(tool.shape).points) > 0:
-                touched = True
-            elif tool.shape is None:
-                # This is for No Op Only
-                touched = self.calc_distance(
-                    test_obj.body.position, denormalize(tool_pos)) < collision_radius
-            if ((large_step_i+1) % self.render_interval == 0) or \
-                    (large_step_i == (self.large_steps - 1) and states == []):
-                ball_pos = normalize_coordinates(test_obj.body.position)
-                ball_vel = normalize_coordinates(test_obj.body.velocity)
-                state = np.concatenate([tool_pos, ball_pos, ball_vel], axis=-1)
+                if data_type == 'video':
+                    state = self.render(mode=mode, add_text=add_text)
+                elif data_type == 'state':
+                    ball_pos = self.normalize_coordinates(test_obj.body.position)
+                    ball_vel = self.normalize_coordinates(test_obj.body.velocity)
+                    state = np.concatenate([tool_pos, ball_pos, ball_vel], axis=-1)
                 states.append(state)
 
-        return states, touched
+        return states, touched, first_touched
 
     def get_all_objs(self):
         """
@@ -280,7 +264,7 @@ class BaseEnv(gym.Env):
         """
         return self.env_tools
 
-    def render(self, mode='rgb_array', render_black_box=False, add_text=None):
+    def render(self, mode='rgb_array', add_text=None):
         """
         Render all currently placed objects to the scene.
         """
@@ -329,9 +313,7 @@ class BaseEnv(gym.Env):
 
             # For all tools/balls in the environment
             for render_obj in render_objs:
-                if render_black_box:
-                    render_obj.render_black_box(self.screen)
-                elif 'high' in mode:
+                if 'high' in mode:
                     render_obj.render(self.screen, self.scale,
                             anti_alias=anti_alias)
                 else:
@@ -355,9 +337,7 @@ class BaseEnv(gym.Env):
 
         else:
             for render_obj in render_objs:
-                if render_black_box:
-                    render_obj.render_black_box(self.screen)
-                elif 'high' in mode:
+                if 'high' in mode:
                     render_obj.render(self.screen, self.scale,
                             anti_alias=anti_alias)
                 else:

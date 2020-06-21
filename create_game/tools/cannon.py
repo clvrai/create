@@ -28,13 +28,6 @@ def cannon_begin_handler(arbiter, space, data):
         return False
     return True
 
-def fan_touching_handler(arbiter, space, data):
-    if arbiter.shapes[0].collision_type == MOVING_OBJ_COLLISION_TYPE:
-        launch_dir = arbiter.shapes[1].properties
-        obj = arbiter.shapes[0]
-        obj.body.apply_force_at_local_point(launch_dir[:], (0, 0))
-        return False
-    return True
 
 class Cannon(FixedRect):
     # 1, 5 pi
@@ -63,7 +56,7 @@ class Cannon(FixedRect):
         space.add(cannon)
         self.attached_shapes.append(cannon)
 
-        h = space.add_collision_handler(1, self.collision_type)
+        h = space.add_collision_handler(MOVING_OBJ_COLLISION_TYPE, self.collision_type)
         h.begin = cannon_begin_handler
 
     def render(self, screen, scale=None, anti_alias=False):
@@ -73,32 +66,41 @@ class Cannon(FixedRect):
         self.img.render(screen, scale, self.flipy)
 
 
+def fan_touching_handler(arbiter, space, data):
+    if arbiter.shapes[0].collision_type == MOVING_OBJ_COLLISION_TYPE:
+        prop = arbiter.shapes[1].properties
+        obj = arbiter.shapes[0]
+        launch_dir = prop[0] * np.array([np.cos(prop[1] - obj.body.angle),
+            np.sin(prop[1] - obj.body.angle)])
+        obj.body.apply_force_at_local_point(launch_dir[:], (0, 0))
+        return False
+    return True
+
 class Fan(FixedRect):
     # 1, 5 pi
     def __init__(self, pos, angle=np.pi/3, force=120.0, color='blue'):
         super().__init__(pos, angle, FAN_WIDTH, FAN_HEIGHT)
 
         self.color = color
-        self.launch_dir = force * np.array([np.cos(angle), np.sin(angle)])
+        self.force = force
+        self.angle = angle
 
         self.img = ImageTool('fan.png', angle, pos[:],
                 use_shape=self.shape,
                 debug_render=False)
         self.collision_type = 3
 
-
     def add_to_space(self, space):
         fan = self.img.get_shape()
         fan.sensor = True
         fan.collision_type = self.collision_type
-        fan.properties = self.launch_dir
+        fan.properties = np.array([self.force, self.angle])
         self.shape = fan
         space.add(fan)
         self.attached_shapes.append(fan)
 
-        h = space.add_collision_handler(1, self.collision_type)
+        h = space.add_collision_handler(MOVING_OBJ_COLLISION_TYPE, self.collision_type)
         h.pre_solve = fan_touching_handler
-
 
     def render(self, screen, scale=None, anti_alias=False):
         if scale is None:

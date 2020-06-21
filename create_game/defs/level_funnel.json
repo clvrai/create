@@ -1,10 +1,11 @@
 {
     "name": "Funnel",
     "target": "[0.0, 0.9]",
-    "goal": "random.choice([[-0.28, -0.8], [0.28, -0.8]])",
+    "goal": "[0.0, 0.0]",
     "reward": "sparse",
     "rnd": {
-            "target": "[uniform(-HIGH_NOISE, DEF_NOISE), uniform(-HIGH_NOISE, DEF_NOISE)]"
+            "target": "[uniform(-HIGH_NOISE, DEF_NOISE), uniform(-HIGH_NOISE, DEF_NOISE)]",
+            "goal": "random.choice([[-0.28, -0.8], [0.28, -0.8]])"
         },
     "env": [
         {

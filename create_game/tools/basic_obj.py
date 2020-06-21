@@ -50,13 +50,6 @@ class BasicObj(object):
         """Convert chipmunk physics to pygame coordinates."""
         return Vec2d(p[0], -p[1] + self.settings.screen_height)
 
-    def render_black_box(self, screen):
-        """ Render a black box for play environment """
-        p1 = self.flipy((self.pos[0] - int(LINE_THICKNESS), self.pos[1]))
-        p2 = self.flipy((self.pos[0] + int(LINE_THICKNESS), self.pos[1]))
-        pg.draw.lines(screen, pg.Color('black'), False, (p1,
-            p2), 2 * int(LINE_THICKNESS))
-
     def render_bb(self, screen, scale):
         shape = self.get_shape()
         shape.cache_bb()

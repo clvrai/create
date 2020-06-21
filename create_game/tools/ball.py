@@ -89,9 +89,6 @@ class Ball(GravityObj):
                 else:
                     pg.draw.circle(screen, pg.Color(self.color), draw_pos, draw_radius)
 
-    def render_black_box(self, screen):
-        self.render(screen)
-
 
 class MarkerBall(Ball):
     def __init__(self, pos, color=marker_color, radius=GOAL_RADIUS):

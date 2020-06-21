@@ -11,6 +11,8 @@ def bucket_touching_handler(arbiter, space, data):
 
     if arbiter.shapes[0].in_bucket:
         arbiter.shapes[0].body.position = locations[0][:]
+        arbiter.shapes[0].body.velocity = pm.Vec2d(0., 0.)
+        arbiter.shapes[0].body.force = pm.Vec2d(0., 0.)
         return False
     elif arbiter.shapes[0].collision_type == MOVING_OBJ_COLLISION_TYPE:
 

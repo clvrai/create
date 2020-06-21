@@ -15,9 +15,18 @@ class UseSplit(Enum):
 
 
 def gen_action_set(settings, tool_gen, allowed_actions, rng):
-    return np.random.choice(allowed_actions, settings.action_set_size, replace=False)
+    if settings.action_set_size is None:
+        return allowed_actions
+    else:
+        no_op_tool = len(tool_gen.tools) - 1
+        allowed_actions = np.setdiff1d(allowed_actions, [no_op_tool])
 
-def get_allowed_actions(settings, tool_gen):
+        ret_set = np.random.choice(allowed_actions, settings.action_set_size, replace=False)
+        if not settings.separate_skip:
+            ret_set[0] = no_op_tool
+        return ret_set
+
+def get_allowed_actions(settings):
     tool_gen = ToolGenerator(settings.gran_factor)
 
     load_dir = osp.join(settings.action_seg_loc, settings.split_name)
