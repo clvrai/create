@@ -73,7 +73,11 @@ See [`examples/multi_task.py`](examples/multi_task.py) for a complete example.
 <br>
 
 ## (4) Game Configuration
-See [`create_game/settings.py`](create_game/settings.py) for a list of all possible settings that can be changed about the game play, rendering, reward structure and simulation. Configure the environment as: 
+See [`create_game/settings.py`](create_game/settings.py) for a list of all
+possible settings that can be changed about the game play, rendering, reward
+structure and simulation. Configure the environment as:
+`env.set_settings(CreateGameSettings())` and specify your settings in
+`CreateGameSettings()`.
 
 <br>
 

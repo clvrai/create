@@ -22,6 +22,12 @@ class CreateGameSettings(object):
             validation_ratio=0.5, gran_factor=1.0,
             override_level_settings=False, with_subgoals=True,
             separate_skip=False):
+        """
+        Notes:
+            - High resolution rendering: specify `render_mega_res=True` and
+              `evaluation_mode=True`. Call `env.render('rgb_array_high_mega_res')`
+              to render frames between steps.
+        """
 
         ######################
         # Reward modifiers
@@ -49,7 +55,7 @@ class CreateGameSettings(object):
         self.render_width = render_width
         self.render_height = render_height
         self.high_res_width = high_res_width
-        self.high_res_height = high_res_height
+        self.high_rek_height = high_res_height
         self.render_ball_traces = render_ball_traces
         self.evaluation_mode = evaluation_mode
         self.render_mega_res = render_mega_res
