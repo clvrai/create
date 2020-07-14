@@ -55,7 +55,7 @@ class CreateGameSettings(object):
         self.render_width = render_width
         self.render_height = render_height
         self.high_res_width = high_res_width
-        self.high_rek_height = high_res_height
+        self.high_res_height = high_res_height
         self.render_ball_traces = render_ball_traces
         self.evaluation_mode = evaluation_mode
         self.render_mega_res = render_mega_res
