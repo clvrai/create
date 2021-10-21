@@ -157,6 +157,20 @@ Our environment is based on Pygame and Pymunk libraries:
 <br>
 
 ## (8) Citation
+If you find this work useful in your research, please consider citing:
 ```
-TBA
+@InProceedings{pmlr-v119-jain20b,
+  title = 	 {Generalization to New Actions in Reinforcement Learning},
+  author =       {Jain, Ayush and Szot, Andrew and Lim, Joseph},
+  booktitle = 	 {Proceedings of the 37th International Conference on Machine Learning},
+  pages = 	 {4661--4672},
+  year = 	 {2020},
+  editor = 	 {III, Hal Daumé and Singh, Aarti},
+  volume = 	 {119},
+  series = 	 {Proceedings of Machine Learning Research},
+  month = 	 {13--18 Jul},
+  publisher =    {PMLR},
+  url = 	 {https://proceedings.mlr.press/v119/jain20b.html}
+}
+
 ```
